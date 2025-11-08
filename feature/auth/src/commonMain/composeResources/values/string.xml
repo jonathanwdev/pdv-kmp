@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources>
+    <string name="pdv_app">PDV App</string>
+    <string name="welcome_title">Ola, Vendedor !</string>
+    <string name="welcome_description">O que gostaria de fazer hoje ?</string>
+    <string name="sale">Venda</string>
+    <string name="products">Produtos</string>
+    <string name="history">Historico</string>
+</resources>
