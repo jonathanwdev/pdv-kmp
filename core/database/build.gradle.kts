@@ -9,6 +9,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(libs.kotlin.stdlib)
+                implementation(projects.core.common)
 
             }
         }
@@ -28,3 +29,4 @@ kotlin {
     }
 
 }
+

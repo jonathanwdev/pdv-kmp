@@ -16,5 +16,6 @@ internal fun Project.configureDesktopTarget() {
                 }
             }
         }
+
     }
 }

@@ -23,6 +23,9 @@ enum class DeviceConfiguration {
     val isMobile: Boolean
         get() = this in listOf(MOBILE_LANDSCAPE, MOBILE_PORTRAIT)
 
+    val isWideScreen: Boolean
+        get() = this in listOf(TABLET_LANDSCAPE,DESKTOP)
+
     companion object {
         fun fromWindowSizeClass(windowSizeClass: WindowSizeClass): DeviceConfiguration {
             return with(windowSizeClass) {
@@ -33,11 +36,11 @@ enum class DeviceConfiguration {
                     minWidthDp >= WindowSizeClass.WIDTH_DP_EXPANDED_LOWER_BOUND &&
                             minHeightDp < WindowSizeClass.HEIGHT_DP_MEDIUM_LOWER_BOUND -> MOBILE_LANDSCAPE
 
-                    minWidthDp in WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND .. WindowSizeClass.WIDTH_DP_EXPANDED_LOWER_BOUND &&
+                    minWidthDp in WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND..WindowSizeClass.WIDTH_DP_EXPANDED_LOWER_BOUND &&
                             minHeightDp >= WindowSizeClass.HEIGHT_DP_EXPANDED_LOWER_BOUND -> TABLET_PORTRAIT
 
                     minWidthDp >= WindowSizeClass.WIDTH_DP_EXPANDED_LOWER_BOUND &&
-                            minHeightDp in WindowSizeClass.HEIGHT_DP_MEDIUM_LOWER_BOUND.. WindowSizeClass.HEIGHT_DP_EXPANDED_LOWER_BOUND -> TABLET_LANDSCAPE
+                            minHeightDp in WindowSizeClass.HEIGHT_DP_MEDIUM_LOWER_BOUND..WindowSizeClass.HEIGHT_DP_EXPANDED_LOWER_BOUND -> TABLET_LANDSCAPE
 
                     else -> DESKTOP
 

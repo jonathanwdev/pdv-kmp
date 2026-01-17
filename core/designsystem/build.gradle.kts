@@ -9,6 +9,9 @@ kotlin {
             dependencies {
                 implementation(libs.kotlin.stdlib)
                 implementation(compose.components.uiToolingPreview)
+                implementation(libs.coil.compose)
+                implementation(libs.coil.network.ktor)
+                implementation(compose.components.resources)
             }
         }
 
@@ -25,4 +28,10 @@ kotlin {
         }
     }
 
+}
+
+compose.resources {
+    publicResClass = true
+    packageOfResClass = "designsystem.resources"
+    generateResClass = auto
 }

@@ -12,13 +12,17 @@ kotlin {
                 implementation(projects.core.domain)
                 implementation(projects.core.network)
                 implementation(projects.core.database)
+                implementation(libs.koin.core)
+
+                implementation(libs.androidx.room.runtime)
+                implementation(libs.sqlite.bundled)
 
             }
         }
 
         androidMain {
             dependencies {
-
+                implementation(libs.koin.android)
             }
         }
 
@@ -27,6 +31,7 @@ kotlin {
 
             }
         }
+
     }
 
 }

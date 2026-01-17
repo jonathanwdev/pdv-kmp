@@ -10,7 +10,7 @@ fun PocPdvTheme(
     content: @Composable () -> Unit
 ) {
     MaterialTheme(
-        colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme,
+        colorScheme = if (darkTheme) LightColorScheme else LightColorScheme,
     ) {
         content()
     }

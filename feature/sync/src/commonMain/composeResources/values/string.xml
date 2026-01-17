@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources>
+    <string name="initializing_sync">Initializing sync</string>
+    <string name="sync_products">Syncing Products...</string>
+    <string name="sync_prices">Syncing Prices...</string>
+    <string name="sync_sales">Syncing Sales...</string>
+    <string name="sync_configs">Syncing Configs...</string>
+    <string name="sync_complete">Synchronization Complete!</string>
+</resources>

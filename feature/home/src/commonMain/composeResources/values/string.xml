@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources>
+    <string name="new_sale_label">New Sale</string>
+    <string name="new_sale_desc">Start a new transaction</string>
+    <string name="exchange_label">Exchange</string>
+    <string name="exchange_desc">Process customer returns</string>
+    <string name="transaction_label">Transaction History</string>
+    <string name="transaction_desc">View past sales</string>
+    <string name="product_catalog_label">Product Catalog</string>
+    <string name="product_catalog_desc">Browse inventory</string>
+
+</resources>

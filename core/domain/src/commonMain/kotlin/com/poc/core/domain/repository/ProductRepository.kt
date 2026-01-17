@@ -4,6 +4,7 @@ import com.poc.core.domain.models.Product
 import kotlinx.coroutines.flow.Flow
 
 interface ProductRepository {
-    fun getProductRemote(): Flow<Product?>
-    fun getProductLocal(): Flow<Product?>
+    fun getProductRemote(sku: String): Flow<Product?>
+    fun getProductLocal(sku: String): Flow<Product?>
+
 }

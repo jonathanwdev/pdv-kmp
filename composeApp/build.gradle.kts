@@ -1,5 +1,3 @@
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.convention.cmp.application)
@@ -12,6 +10,7 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+            implementation(libs.koin.android)
         }
         commonMain.dependencies {
             implementation(projects.core.presentation)
@@ -19,12 +18,16 @@ kotlin {
             implementation(projects.core.data)
             implementation(projects.core.database)
             implementation(projects.core.domain)
+            implementation(projects.core.network)
+            implementation(projects.core.common)
 
-            implementation(projects.feature.auth)
+            implementation(projects.feature.sync)
+            implementation(projects.feature.home)
             implementation(projects.feature.sale)
 
-            implementation(libs.jetbrains.compose.navigation)
+            implementation(libs.bundles.koin.common)
 
+            implementation(libs.jetbrains.compose.navigation)
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)
@@ -34,10 +37,15 @@ kotlin {
             implementation(libs.jetbrains.compose.viewmodel)
             implementation(libs.jetbrains.lifecycle.compose)
         }
+
         desktopMain.dependencies {
+            implementation(projects.core.presentation)
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
             implementation(libs.kotlin.stdlib)
+            implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
+
         }
     }
 }

@@ -1,9 +1,9 @@
 package com.poc.core.domain.models
 
 data class Product(
-    val id: String,
+    val sku: Int,
     val name: String,
     val price: Double,
-    val description: String,
     val imageUrl: String
 )
+

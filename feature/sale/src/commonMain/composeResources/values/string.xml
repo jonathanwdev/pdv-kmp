@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources>
+    <string name="cancel_sale">Cancel Sale</string>
+    <string name="new_sale">New Sale</string>
+    <string name="scan_product">Scan or enter code/name</string>
+    <string name="subtotal">Subtotal</string>
+    <string name="total">Total</string>
+    <string name="tax">Tax (%1$s%)</string>
+    <string name="charge_btn_with_price">Charge %1$s</string>
+    <string name="sale_details">Sale Details</string>
+    <string name="sale_payment">Payment</string>
+    <string name="proceed_payment">Proceed to Payment</string>
+    <string name="edit_sale">Edit Sale</string>
+    <string name="total_due">Total Due</string>
+    <string name="payment_type_debit_card">Debit Card</string>
+    <string name="payment_type_credit_card">Credit Card</string>
+    <string name="payment_type_cash">Cash</string>
+    <string name="payment_type_mobile">Mobile Pay</string>
+    <string name="secure_payment">Secure Payment</string>
+    <string name="payment_successful">Payment Successful!</string>
+    <string name="thank_you_for_your_purchase">Thank you for your purchase.</string>
+    <string name="total_amount_paid">Total Amount Paid</string>
+    <string name="date_n_time">Date &amp; Time</string>
+    <string name="transaction_id">Transaction ID</string>
+    <string name="receipt_options">Receipt Options</string>
+    <string name="enter_email_address">Enter email address</string>
+    <string name="send">Send</string>
+    <string name="print_receipt">Print Receipt</string>
+    <string name="start_new_sale">Start New Sale</string>
+    <string name="return_to_home">Return to Home</string>
+
+
+</resources>

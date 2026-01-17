@@ -10,6 +10,7 @@ kotlin {
                 implementation(libs.kotlin.stdlib)
                 implementation(libs.material3.adaptive.layout)
                 implementation(projects.core.domain)
+                implementation(libs.jetbrains.lifecycle.compose)
             }
         }
 

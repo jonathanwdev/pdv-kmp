@@ -4,6 +4,7 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
+import kotlin.text.get
 
 
 class RoomConventionPlugin: Plugin<Project> {
@@ -26,6 +27,7 @@ class RoomConventionPlugin: Plugin<Project> {
                 "kspIosSimulatorArm64"(libs.findLibrary("androidx-room-compiler").get())
                 "kspIosArm64"(libs.findLibrary("androidx-room-compiler").get())
                 "kspIosX64"(libs.findLibrary("androidx-room-compiler").get())
+                "kspDesktop"(libs.findLibrary("androidx-room-compiler").get())
             }
         }
     }
