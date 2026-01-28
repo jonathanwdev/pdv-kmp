@@ -31,13 +31,12 @@ import pocpdv.feature.sale.generated.resources.total
 @Composable
 fun SalePriceDescriptionBox(
     modifier: Modifier = Modifier,
-    subtotal: Int,
+    total: String,
+    subtotal: String,
+    totalTax: String,
     tax: Int,
     content: @Composable ColumnScope.() -> Unit
 ) {
-    val taxValue = subtotal * tax / 100
-    val total = subtotal + taxValue
-
     Box(
         modifier = modifier
             .drawShadowLine(),
@@ -60,7 +59,7 @@ fun SalePriceDescriptionBox(
                     color = MaterialTheme.colorScheme.inverseOnSurface
                 )
                 Text(
-                    text = "$$subtotal",
+                    text = subtotal,
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.Medium,
                     color = MaterialTheme.colorScheme.inverseOnSurface
@@ -78,7 +77,7 @@ fun SalePriceDescriptionBox(
                     color = MaterialTheme.colorScheme.inverseOnSurface
                 )
                 Text(
-                    text = "$$taxValue",
+                    text = totalTax,
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.Medium,
                     color = MaterialTheme.colorScheme.inverseOnSurface
@@ -97,7 +96,7 @@ fun SalePriceDescriptionBox(
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
-                    text = "$$total",
+                    text = total,
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface
@@ -113,8 +112,10 @@ fun SalePriceDescriptionBox(
 @Preview(showBackground = true)
 private fun SalePriceDescriptionBoxPreview() {    
     SalePriceDescriptionBox(
-        subtotal = 100,
-        tax = 7
+        subtotal = "100",
+        total = "100",
+        tax = 7,
+        totalTax = "100"
     )  {
 
     }

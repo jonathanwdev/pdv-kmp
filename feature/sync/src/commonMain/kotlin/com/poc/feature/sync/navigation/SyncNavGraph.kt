@@ -6,12 +6,12 @@ import androidx.navigation.navigation
 import com.poc.feature.sync.screens.sync.SyncRoot
 import kotlinx.serialization.Serializable
 
-sealed interface SyncRoutes {
+sealed interface SyncNavRoutes {
     @Serializable
-    data object Graph: SyncRoutes
+    data object Graph: SyncNavRoutes
 
     @Serializable
-    data object SyncRoute: SyncRoutes
+    data object SyncRoute: SyncNavRoutes
 
 }
 
@@ -19,10 +19,10 @@ sealed interface SyncRoutes {
 fun NavGraphBuilder.syncNavGraph(
     onNavigateToHome: () -> Unit
 ) {
-    navigation<SyncRoutes.Graph>(
-        startDestination = SyncRoutes.SyncRoute
+    navigation<SyncNavRoutes.Graph>(
+        startDestination = SyncNavRoutes.SyncRoute
     ) {
-        composable<SyncRoutes.SyncRoute> {
+        composable<SyncNavRoutes.SyncRoute> {
             SyncRoot(
                 onSyncDone = onNavigateToHome
             )

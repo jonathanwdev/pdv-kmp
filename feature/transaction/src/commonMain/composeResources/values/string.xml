@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources>
+    <string name="back">Back</string>
+    <string name="transactions">Transactions</string>
+    <string name="daily_total">Daily Net Total</string>
+    <string name="you_ve_reached_percent_of_your_daily_goal">You've reached %1$s% of your daily goal.</string>
+    <string name="transaction_details">Transaction Details</string>
+    <string name="transaction_id">Transaction ID</string>
+    <string name="date">Date</string>
+    <string name="time">Time</string>
+    <string name="cashier">Cashier</string>
+    <string name="items_purchased">Items Purchased</string>
+    <string name="subtotal">Subtotal</string>
+    <string name="tax">Tax</string>
+    <string name="discount">Discount</string>
+    <string name="total">Total</string>
+    <string name="reprint_receipt">Re-print Receipt</string>
+    <string name="issue_refund">Issue Refund</string>
+    <string name="total_amount">Total Amount</string>
+    <string name="completed">Completed</string>
+</resources>

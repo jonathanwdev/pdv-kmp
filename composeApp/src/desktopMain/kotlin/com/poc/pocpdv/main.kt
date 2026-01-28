@@ -7,7 +7,9 @@ import androidx.compose.ui.window.rememberWindowState
 import com.poc.pocpdv.di.initKoin
 
 fun main() {
-    initKoin()
+    initKoin {
+        printLogger()
+    }
     application {
         Window(
             state = rememberWindowState(

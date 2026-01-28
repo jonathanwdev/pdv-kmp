@@ -24,6 +24,9 @@ kotlin {
             implementation(projects.feature.sync)
             implementation(projects.feature.home)
             implementation(projects.feature.sale)
+            implementation(projects.feature.transaction)
+            implementation(projects.feature.catalog)
+            implementation(projects.feature.exchange)
 
             implementation(libs.bundles.koin.common)
 

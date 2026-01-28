@@ -56,6 +56,7 @@ desktopPackageName = "PocPdv"
 desktopPackageVersion = "1.0.0"
 runner = "1.7.0"
 junit = "1.3.0"
+compottie="2.0.2"
 
 [libraries]
 # Kotlin
@@ -116,6 +117,9 @@ material3-adaptive-navigation = { module = "org.jetbrains.compose.material3.adap
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
+
+# Compottie
+compottie = { module = "io.github.alexzhirkevich:compottie", version.ref = "compottie" }
 
 
 # Coil

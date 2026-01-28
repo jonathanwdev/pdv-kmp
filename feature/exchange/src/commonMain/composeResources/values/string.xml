@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources>
+    <string name="send">Send</string>
+    <string name="exchange_title">Exchange</string>
+    <string name="find_sale_step">Find Sale</string>
+    <string name="select_items_step">Select Items</string>
+    <string name="summary_step">Summary</string>
+    <string name="search_transaction_title">Search Transaction</string>
+    <string name="search_transaction_description">Locate the original sale record to initiate return or exchange.</string>
+    <string name="receipt_id_label">Receipt ID</string>
+    <string name="receipt_id_placeholder">Scan or enter ID</string>
+    <string name="sale_date_label">Sale Date</string>
+    <string name="sale_date_placeholder">Select date</string>
+    <string name="clear">CLEAR</string>
+    <string name="find_transaction_button">Find Transaction</string>
+    <string name="back_button_description">Back</string>
+    <string name="barcode_scanner_description">Scan Barcode</string>
+    <string name="calendar_icon_description">Select Date</string>
+    <string name="backspace_description">Backspace</string>
+    <string name="select_returns_title">Select Returns</string>
+    <string name="return_items_step_description">Step %1$d of %2$d: Return Items</string>
+    <string name="original_transaction_items">Original Transaction Items</string>
+    <string name="transaction_id_label">Transaction ID</string>
+    <string name="return_window_note">Only items within the 30-day return window are displayed.\nSelect items to calculate exchange value.</string>
+    <string name="value_of_returns">Value of Returns</string>
+    <string name="select_replacement_items">Select Replacement Items</string>
+    <string name="total_returned_items">+%1$d</string>
+    <string name="exchange_summary_title">Exchange Summary</string>
+    <string name="summary_step_description">Step %1$d of %2$d: Summary &amp; Balance</string>
+    <string name="returned_items_section_title">Returned Items</string>
+    <string name="subtotal_returned_label">Subtotal Returned</string>
+    <string name="subtotal_returned_new">Subtotal New</string>
+    <string name="balance_due_from_customer_label">Balance Due from Customer</string>
+    <string name="complete_exchange_button">Complete Exchange</string>
+</resources>

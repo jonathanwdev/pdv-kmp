@@ -24,7 +24,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -41,16 +40,17 @@ import com.poc.core.designsystem.components.buttons.PrinterButton
 import com.poc.core.designsystem.components.common.Separator
 import com.poc.core.designsystem.components.textfield.ReceiptSendTextField
 import com.poc.core.designsystem.theme.PocPdvTheme
+import com.poc.core.presentation.utils.ObserveAsEvent
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.scope.Scope
 import pocpdv.feature.sale.generated.resources.Res
 import pocpdv.feature.sale.generated.resources.date_n_time
 import pocpdv.feature.sale.generated.resources.enter_email_address
 import pocpdv.feature.sale.generated.resources.payment_successful
 import pocpdv.feature.sale.generated.resources.receipt_options
 import pocpdv.feature.sale.generated.resources.return_to_home
-import pocpdv.feature.sale.generated.resources.start_new_sale
 import pocpdv.feature.sale.generated.resources.thank_you_for_your_purchase
 import pocpdv.feature.sale.generated.resources.total_amount_paid
 import pocpdv.feature.sale.generated.resources.transaction_id
@@ -58,25 +58,29 @@ import pocpdv.feature.sale.generated.resources.transaction_id
 
 @Composable
 fun SummaryRoot(
+    koinScope: Scope,
     onNavigateBackToHome: () -> Unit,
-    onNavigateToStartSale: () -> Unit,
-    viewModel: SummaryViewModel = koinViewModel()
+    viewModel: SummaryViewModel = koinViewModel<SummaryViewModel>(scope = koinScope)
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+    ObserveAsEvent(viewModel.event) { event ->
+        when(event) {
+            SummaryEvent.OnFinish -> {
+                onNavigateBackToHome()
+            }
+        }
+    }
 
     SummaryScreen(
         state = state,
         onAction = viewModel::onAction,
-        onNavigateBackToHome = onNavigateBackToHome,
-        onNavigateToStartSale = onNavigateToStartSale
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SummaryScreen(
-    onNavigateBackToHome: () -> Unit,
-    onNavigateToStartSale: () -> Unit,
     state: SummaryState,
     onAction: (SummaryAction) -> Unit,
 ) {
@@ -161,7 +165,7 @@ fun SummaryScreen(
                                 style = MaterialTheme.typography.titleSmall
                             )
                             Text(
-                                text = "$54.21",
+                                text = state.totalValueFormatted,
                                 color = MaterialTheme.colorScheme.onSurface,
                                 style = MaterialTheme.typography.titleLarge,
                                 fontWeight = FontWeight.Bold,
@@ -183,7 +187,7 @@ fun SummaryScreen(
                                 style = MaterialTheme.typography.titleSmall
                             )
                             Text(
-                                text = "Oct 26, 2023, 2:45 PM",
+                                text = state.dateTimeFormatted,
                                 fontWeight = FontWeight.Medium,
                                 color = MaterialTheme.colorScheme.onSurface,
                                 style = MaterialTheme.typography.titleSmall
@@ -204,7 +208,7 @@ fun SummaryScreen(
                                 style = MaterialTheme.typography.titleSmall
                             )
                             Text(
-                                text = "TXN12345ABC",
+                                text = state.transactionId,
                                 fontWeight = FontWeight.Medium,
                                 color = MaterialTheme.colorScheme.onSurface,
                                 style = MaterialTheme.typography.titleSmall
@@ -226,7 +230,7 @@ fun SummaryScreen(
                     Spacer(Modifier.height(16.dp))
                     ReceiptSendTextField(
                         modifier = Modifier.fillMaxWidth(),
-                        value = "",
+                        value = state.userEmail,
                         onValueChange = {},
                         placeholder = stringResource(Res.string.enter_email_address)
                     )
@@ -243,20 +247,12 @@ fun SummaryScreen(
             ) {
                 PocPdvButton(
                     modifier = Modifier.fillMaxWidth(),
-                    text = stringResource(Res.string.start_new_sale),
-                    onClick = onNavigateToStartSale
+                    text = stringResource(Res.string.return_to_home),
+                    onClick = {
+                        onAction(SummaryAction.OnReturnToHomeClick)
+                    }
                 )
-                TextButton(
-                    onClick = onNavigateBackToHome,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(
-                        text = stringResource(Res.string.return_to_home),
-                        fontWeight = FontWeight.Medium,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                }
+
             }
         }
     }
@@ -270,8 +266,6 @@ private fun SummaryScreenPreview() {
         SummaryScreen(
             state = SummaryState(),
             onAction = {},
-            onNavigateBackToHome = {},
-            onNavigateToStartSale = {}
         )
     }
 }

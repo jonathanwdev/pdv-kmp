@@ -13,11 +13,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AttachMoney
 import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material.icons.filled.CreditCard
-import androidx.compose.material.icons.filled.MobileFriendly
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -31,15 +30,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.poc.core.designsystem.components.buttons.CardButton
 import com.poc.core.designsystem.components.buttons.PocPdvButton
 import com.poc.core.designsystem.modifiers.drawShadowLine
 import com.poc.core.designsystem.theme.PocPdvTheme
+import com.poc.core.domain.models.PaymentMethodEnum
 import com.poc.feature.sale.components.SaleTopBar
 import com.poc.feature.sale.components.TotalBox
+import com.poc.feature.sale.models.PaymentListItem
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.scope.Scope
 import pocpdv.feature.sale.generated.resources.Res
 import pocpdv.feature.sale.generated.resources.charge_btn_with_price
 import pocpdv.feature.sale.generated.resources.payment_type_cash
@@ -51,24 +53,30 @@ import pocpdv.feature.sale.generated.resources.secure_payment
 
 @Composable
 fun PaymentRoot(
+    koinScope: Scope,
     onNavigateBack: () -> Unit,
     onNavigateToSummary: () -> Unit,
-    viewModel: PaymentViewModel = viewModel()
+    onNavigateBackToHome: () -> Unit,
+    viewModel: PaymentViewModel = koinViewModel<PaymentViewModel>(scope = koinScope)
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     PaymentScreen(
-        onNavigateBack = onNavigateBack,
-        onNavigateToSummary = onNavigateToSummary,
         state = state,
-        onAction = viewModel::onAction
+        onAction = { action ->
+            when (action) {
+                PaymentAction.OnCancelClick -> onNavigateBackToHome()
+                PaymentAction.OnChargeClick -> onNavigateToSummary()
+                PaymentAction.OnGoBackClick -> onNavigateBack()
+                else -> Unit
+            }
+            viewModel.onAction(action)
+        }
     )
 }
 
 @Composable
 fun PaymentScreen(
-    onNavigateBack: () -> Unit,
-    onNavigateToSummary: () -> Unit,
     state: PaymentState,
     onAction: (PaymentAction) -> Unit,
 ) {
@@ -76,10 +84,14 @@ fun PaymentScreen(
         containerColor = MaterialTheme.colorScheme.surfaceVariant,
         topBar = {
             SaleTopBar(
-                onCancelMenuClick = {},
+                onCancelMenuClick = {
+                    onAction(PaymentAction.OnCancelClick)
+                },
                 navigationIcon = {
                     IconButton(
-                        onClick = onNavigateBack
+                        onClick = {
+                            onAction(PaymentAction.OnGoBackClick)
+                        }
                     ) {
                         Icon(
                             imageVector = Icons.Default.ChevronLeft,
@@ -97,7 +109,7 @@ fun PaymentScreen(
         ) {
             TotalBox(
                 isLight = true,
-                total = "$35.00"
+                total = state.totalValueFormatted
             )
             Spacer(Modifier.height(20.dp))
             LazyVerticalGrid(
@@ -107,59 +119,46 @@ fun PaymentScreen(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-                item {
+                items(
+                    items = listOf(
+                        PaymentListItem(
+                            methodEnum = PaymentMethodEnum.DEBIT_CARD,
+                            label = Res.string.payment_type_debit_card,
+                            icon = Icons.Default.CreditCard,
+                        ),
+                        PaymentListItem(
+                            methodEnum = PaymentMethodEnum.CREDIT_CARD,
+                            label = Res.string.payment_type_credit_card,
+                            icon = Icons.Default.CreditCard,
+                        ),
+                        PaymentListItem(
+                            methodEnum = PaymentMethodEnum.MOBILE,
+                            label = Res.string.payment_type_mobile,
+                            icon = Icons.Default.CreditCard,
+                        ),
+                        PaymentListItem(
+                            methodEnum = PaymentMethodEnum.CASH,
+                            label = Res.string.payment_type_cash,
+                            icon = Icons.Default.CreditCard,
+                        )
+                    )
+                ) { item ->
                     CardButton(
                         modifier = Modifier.size(120.dp),
-                        onClick = {},
-                        isSelected = true,
+                        onClick = {
+                            onAction(PaymentAction.OnPaymentMethodClick(item.methodEnum))
+                        },
+                        isSelected = item.methodEnum == state.paymentMethodSelected,
                         icon = {
                             Icon(
-                                imageVector = Icons.Default.CreditCard,
-                                contentDescription = stringResource(Res.string.payment_type_debit_card)
+                                imageVector = item.icon,
+                                contentDescription = stringResource(item.label)
                             )
                         },
-                        label = stringResource(Res.string.payment_type_debit_card),
+                        label = stringResource(item.label),
                     )
                 }
-                item {
-                    CardButton(
-                        modifier = Modifier.size(120.dp),
-                        onClick = {},
-                        icon = {
-                            Icon(
-                                imageVector = Icons.Default.CreditCard,
-                                contentDescription = stringResource(Res.string.payment_type_credit_card)
-                            )
-                        },
-                        label = stringResource(Res.string.payment_type_credit_card),
-                    )
-                }
-                item {
-                    CardButton(
-                        modifier = Modifier.size(120.dp),
-                        onClick = {},
-                        icon = {
-                            Icon(
-                                imageVector = Icons.Default.AttachMoney,
-                                contentDescription = stringResource(Res.string.payment_type_cash)
-                            )
-                        },
-                        label = stringResource(Res.string.payment_type_cash),
-                    )
-                }
-                item {
-                    CardButton(
-                        modifier = Modifier.size(120.dp),
-                        onClick = {},
-                        icon = {
-                            Icon(
-                                imageVector = Icons.Default.MobileFriendly,
-                                contentDescription = stringResource(Res.string.payment_type_mobile)
-                            )
-                        },
-                        label = stringResource(Res.string.payment_type_mobile),
-                    )
-                }
+
                 item(
                     span = {
                         GridItemSpan(2)
@@ -167,7 +166,10 @@ fun PaymentScreen(
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(5.dp, Alignment.CenterHorizontally),
+                        horizontalArrangement = Arrangement.spacedBy(
+                            5.dp,
+                            Alignment.CenterHorizontally
+                        ),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
@@ -181,21 +183,24 @@ fun PaymentScreen(
                             fontWeight = FontWeight.SemiBold
                         )
                     }
-                    
+
                 }
             }
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .drawShadowLine()
-                    .padding(vertical = 16.dp, horizontal = 12.dp)
-                ,
+                    .padding(vertical = 16.dp, horizontal = 12.dp),
                 contentAlignment = Alignment.TopCenter,
             ) {
                 PocPdvButton(
                     modifier = Modifier.fillMaxWidth(),
-                    text = stringResource(Res.string.charge_btn_with_price, "$33"),
-                    onClick = onNavigateToSummary
+                    enabled = state.paymentMethodSelected != null,
+                    text = stringResource(Res.string.charge_btn_with_price, state.totalValueFormatted),
+                    onClick = {
+                        onAction(PaymentAction.OnChargeClick)
+
+                    }
                 )
             }
         }
@@ -208,8 +213,6 @@ private fun Preview() {
     PocPdvTheme {
         PaymentScreen(
             state = PaymentState(),
-            onNavigateBack = {},
-            onNavigateToSummary = {},
             onAction = {}
         )
     }

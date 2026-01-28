@@ -9,7 +9,8 @@ fun ProductResponse.toEntity(): ProductEntity {
         sku = id,
         name = title,
         price = price,
-        imageUrl = image
+        imageUrl = image,
+        tax = (price * 7) / 100
     )
 }
 
@@ -19,6 +20,8 @@ fun ProductEntity.toDomain(): Product {
         sku = sku,
         name = name,
         price = price,
+        totalPrice = price + tax,
+        tax = tax,
         imageUrl = imageUrl
     )
 }
@@ -28,7 +31,9 @@ fun ProductResponse.toDomain(): Product {
         sku = id,
         name = title,
         price = price,
-        imageUrl = image
+        imageUrl = image,
+        tax = (this.price * 7) / 100,
+        totalPrice = ((this.price * 7) / 100) + price
     )
 }
 

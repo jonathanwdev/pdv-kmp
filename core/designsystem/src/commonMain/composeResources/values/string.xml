@@ -2,4 +2,7 @@
 <resources>
     <string name="send">Send</string>
     <string name="print_receipt">Print Receipt</string>
+    <string name="ok">OK</string>
+    <string name="cancel">CANCEL</string>
+    <string name="clear">CLEAR</string>
 </resources>

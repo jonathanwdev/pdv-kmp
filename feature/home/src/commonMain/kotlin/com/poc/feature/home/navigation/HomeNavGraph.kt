@@ -6,12 +6,12 @@ import androidx.navigation.navigation
 import com.poc.feature.home.screens.home.HomeRoot
 import kotlinx.serialization.Serializable
 
-sealed interface HomeRoutes {
+sealed interface HomeNavRoutes {
     @Serializable
-    data object Graph: HomeRoutes
+    data object Graph: HomeNavRoutes
 
     @Serializable
-    data object HomeRoute: HomeRoutes
+    data object HomeRoute: HomeNavRoutes
 
 }
 
@@ -22,10 +22,10 @@ fun NavGraphBuilder.homeNavGraph(
     onNavigateToExchange: () -> Unit,
     onNavigateToTransactions: () -> Unit,
 ) {
-    navigation<HomeRoutes.Graph>(
-        startDestination = HomeRoutes.HomeRoute
+    navigation<HomeNavRoutes.Graph>(
+        startDestination = HomeNavRoutes.HomeRoute
     ) {
-        composable<HomeRoutes.HomeRoute> {
+        composable<HomeNavRoutes.HomeRoute> {
             HomeRoot(
                 onNavigateToSale = onNavigateToSale,
                 onNavigateToCatalog = onNavigateToCatalog,

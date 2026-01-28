@@ -25,6 +25,7 @@ fun PocPdvButton(
     modifier: Modifier = Modifier,
     text: String,
     icon: ImageVector? = null,
+    enabled: Boolean = true,
     onClick: () -> Unit,
 ) {
     Button(
@@ -32,6 +33,7 @@ fun PocPdvButton(
             onClick()
         },
         modifier = modifier,
+        enabled = enabled,
         shape = RoundedCornerShape(25.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.tertiary,

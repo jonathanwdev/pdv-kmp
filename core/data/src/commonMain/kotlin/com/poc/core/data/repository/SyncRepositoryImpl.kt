@@ -10,6 +10,8 @@ class SyncRepositoryImpl(
     private val pocPdvDatabase: PocPdvDatabase
 ): SyncRepository {
     override suspend fun syncProducts() {
+        val hasProducts = pocPdvDatabase.productDao.getProducts()
+        if(hasProducts.isNotEmpty()) return
         val products = productDataSource.getProducts()
         pocPdvDatabase.productDao.upsertAll(products.map { it.toEntity() })
     }

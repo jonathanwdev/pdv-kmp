@@ -15,7 +15,13 @@ interface ProductDao {
     @Upsert
     suspend fun upsert(product: ProductEntity)
 
-    @Query("SELECT * FROM productentity WHERE sku = :sku")
-    fun getProductsBySku(sku: Long): Flow<List<ProductEntity>>
+    @Query("SELECT * FROM products WHERE sku = :sku")
+    fun getProductsBySkuFlow(sku: Long): Flow<ProductEntity?>
+
+    @Query("SELECT * FROM products WHERE sku = :sku")
+    suspend fun getProductsBySku(sku: Long): ProductEntity?
+
+    @Query("SELECT * FROM products")
+    suspend fun getProducts(): List<ProductEntity>
 
 }
