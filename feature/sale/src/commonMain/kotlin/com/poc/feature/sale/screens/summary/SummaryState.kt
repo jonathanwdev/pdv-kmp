@@ -12,8 +12,8 @@ data class SummaryState(
     val isSent: Boolean = false,
     val isPrinted: Boolean = false,
 ) {
-    val transactionId: String = "TXN${saleId}S"
-    val dateTimeFormatted: String = DateFormat.formatTransactionTime(this.dateTime)
+    val transactionId: String = "TXN${saleId}SL"
+    val dateTimeFormatted: String = DateFormat.formatTransactionDateTime(this.dateTime)
 
 }
 

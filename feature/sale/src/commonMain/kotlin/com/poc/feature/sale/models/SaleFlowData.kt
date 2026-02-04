@@ -4,6 +4,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.poc.core.domain.models.PaymentMethodEnum
+import com.poc.core.domain.models.SaleItemUI
 import com.poc.core.presentation.format.formatMoney
 
 data class SaleFlowState(

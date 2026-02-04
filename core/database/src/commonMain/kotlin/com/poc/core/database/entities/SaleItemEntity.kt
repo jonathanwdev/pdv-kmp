@@ -12,7 +12,7 @@ import androidx.room.PrimaryKey
             parentColumns = ["saleId"],
             childColumns = ["saleId"],
             onDelete = ForeignKey.CASCADE
-        )
+        ),
     ]
 )
 data class SaleItemEntity(
@@ -26,7 +26,7 @@ data class SaleItemEntity(
     val price: Double,
     val tax: Double,
     val totalPrice: Double,
-    val isExchanged: Boolean = false
+    val returnedQuantity: Int = 0
 )
 
 

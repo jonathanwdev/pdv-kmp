@@ -47,16 +47,17 @@ class SummaryViewModel(
         )
 
     private suspend fun finishSale() {
+        val sale = Sale(
+            saleId = saleFlowData.saleFlowState.saleId,
+            timestamp = _state.value.dateTime.toEpochMilliseconds(),
+            taxPercentage = saleFlowData.saleFlowState.taxPercentage.toDouble(),
+            totalValue = saleFlowData.saleFlowState.totalAmount,
+            totalTaxValue = saleFlowData.saleFlowState.totalTaxAmount,
+            paymentMethod = saleFlowData.saleFlowState.paymentMethodSelected!!,
+            items = saleFlowData.saleFlowState.items.map { it.toSaleItem(saleFlowData.saleFlowState.saleId) }
+        )
         saleRepository.saveSale(
-            sale = Sale(
-                saleId = saleFlowData.saleFlowState.saleId,
-                timestamp = _state.value.dateTime.toEpochMilliseconds(),
-                taxPercentage = saleFlowData.saleFlowState.taxPercentage.toDouble(),
-                totalValue = saleFlowData.saleFlowState.totalAmount,
-                totalTaxValue = saleFlowData.saleFlowState.totalTaxAmount,
-                paymentMethod = saleFlowData.saleFlowState.paymentMethodSelected!!,
-                items = saleFlowData.saleFlowState.items.map { it.toSaleItem(saleFlowData.saleFlowState.saleId) }
-            )
+            sale = sale
         )
         _event.send(SummaryEvent.OnFinish)
 
@@ -67,8 +68,11 @@ class SummaryViewModel(
     fun onAction(action: SummaryAction) {
        viewModelScope.launch {
            when (action) {
-               SummaryAction.OnReturnToHomeClick -> {
-                   finishSale()
+               SummaryAction.OnReturnToHomeClick -> finishSale()
+               is SummaryAction.OnEmailChange ->  _state.update { it.copy(userEmail = action.email) }
+               SummaryAction.OnSendClick -> {
+                   if(_state.value.userEmail.isBlank()) return@launch
+                   _state.update { it.copy(isSent = true, userEmail = "") }
                }
            }
        }

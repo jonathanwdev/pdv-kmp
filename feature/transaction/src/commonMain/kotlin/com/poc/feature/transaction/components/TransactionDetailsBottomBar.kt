@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ReceiptLong
-import androidx.compose.material.icons.filled.SettingsBackupRestore
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -18,33 +18,34 @@ import com.poc.core.designsystem.theme.PocPdvTheme
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import pocpdv.feature.transaction.generated.resources.Res
-import pocpdv.feature.transaction.generated.resources.issue_refund
+import pocpdv.feature.transaction.generated.resources.go_home
+import pocpdv.feature.transaction.generated.resources.reprint_receipt
 
 @Composable
 fun TransactionDetailsBottomBar(
     modifier: Modifier = Modifier,
     onReprintClick: () -> Unit,
-    onIssueRefoundClick: () -> Unit,
+    onGoHomeClick: () -> Unit,
 ) {
     Column(
         modifier = modifier
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.surface)
             .padding(16.dp)
-            .padding(bottom = 16.dp),
+            .padding(bottom = 40.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         PocPdvButton(
             onClick = { onReprintClick() },
             modifier = Modifier.fillMaxWidth(),
             icon = Icons.AutoMirrored.Default.ReceiptLong,
-            text = stringResource(Res.string.issue_refund)
+            text = stringResource(Res.string.reprint_receipt)
         )
         PocPdvOutlineButton(
-            onClick = { onIssueRefoundClick() },
+            onClick = { onGoHomeClick() },
             modifier = Modifier.fillMaxWidth(),
-            text = stringResource(Res.string.issue_refund),
-            icon = Icons.Default.SettingsBackupRestore
+            text = stringResource(Res.string.go_home),
+            icon = Icons.Default.Home
         )
     }
 }
@@ -55,7 +56,7 @@ private fun TransactionDetailsBottomBarPreview() {
     PocPdvTheme {
         TransactionDetailsBottomBar(
             onReprintClick = {},
-            onIssueRefoundClick = {}
+            onGoHomeClick = {}
         )
     }
 }

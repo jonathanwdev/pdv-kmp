@@ -1,7 +1,7 @@
 package com.poc.feature.sale.screens.bag
 
 import com.poc.core.presentation.format.formatMoney
-import com.poc.feature.sale.models.SaleItemUI
+import com.poc.core.domain.models.SaleItemUI
 
 data class BagState(
     val productSku: String = "",

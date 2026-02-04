@@ -2,7 +2,6 @@ package com.poc.feature.exchange.screens.findSale
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,49 +18,64 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.poc.core.designsystem.components.buttons.PocPdvButton
 import com.poc.core.designsystem.components.common.VirtualKeypad
-import com.poc.core.designsystem.components.pickers.PocPdvDatePicker
 import com.poc.core.designsystem.components.textfield.PocPdvTextField
 import com.poc.core.designsystem.theme.PocPdvTheme
+import com.poc.core.presentation.utils.ObserveAsEvent
 import com.poc.feature.exchange.components.ExchangeSteps
 import com.poc.feature.exchange.components.ExchangeTopAppBar
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.scope.Scope
 import pocpdv.feature.exchange.generated.resources.Res
 import pocpdv.feature.exchange.generated.resources.barcode_scanner_description
 import pocpdv.feature.exchange.generated.resources.exchange_title
 import pocpdv.feature.exchange.generated.resources.find_transaction_button
 import pocpdv.feature.exchange.generated.resources.receipt_id_label
 import pocpdv.feature.exchange.generated.resources.receipt_id_placeholder
-import pocpdv.feature.exchange.generated.resources.sale_date_label
+import pocpdv.feature.exchange.generated.resources.sale_not_found
 import pocpdv.feature.exchange.generated.resources.search_transaction_description
 import pocpdv.feature.exchange.generated.resources.search_transaction_title
 
 @Composable
 fun FindSaleRoot(
-    viewModel: FindSaleViewModel = koinViewModel<FindSaleViewModel>(),
+    koinScope: Scope,
+    viewModel: FindSaleViewModel = koinViewModel<FindSaleViewModel>(scope = koinScope),
     onNavigateBackToHome: () -> Unit,
     onNavigateToSelectItems: () -> Unit,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val notFoundMessage = stringResource(Res.string.sale_not_found)
+
+    ObserveAsEvent(viewModel.event) { event ->
+        when(event) {
+            FindSaleEvent.SaleFound -> onNavigateToSelectItems()
+            FindSaleEvent.SaleNotFound -> {
+                snackbarHostState.showSnackbar(notFoundMessage)
+            }
+        }
+    }
 
     FindSaleScreen(
         state = state,
+        snackbarHostState = snackbarHostState,
         onAction = { action ->
-            when(action) {
+            when (action) {
                 FindSaleAction.NavigateBack -> onNavigateBackToHome()
-                FindSaleAction.OnFindTransactionClick -> onNavigateToSelectItems()
                 else -> viewModel.onAction(action)
             }
         }
@@ -72,10 +86,12 @@ fun FindSaleRoot(
 @Composable
 fun FindSaleScreen(
     state: FindSaleState,
+    snackbarHostState: SnackbarHostState,
     onAction: (FindSaleAction) -> Unit,
 ) {
     Scaffold(
         containerColor = MaterialTheme.colorScheme.surface,
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             ExchangeTopAppBar(
                 text = stringResource(Res.string.exchange_title),
@@ -96,8 +112,9 @@ fun FindSaleScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .weight(1f)
             ) {
-                ExchangeSteps(currentStep = state.currentStep)
+                ExchangeSteps(currentStep = 1)
                 Spacer(Modifier.height(22.dp))
                 Text(
                     text = stringResource(Res.string.search_transaction_title),
@@ -125,13 +142,12 @@ fun FindSaleScreen(
                     ),
                 ) {
                     Column(
-                        modifier = Modifier.padding(20.dp),
-                        verticalArrangement = Arrangement.spacedBy(20.dp)
+                        modifier = Modifier.padding(20.dp).padding(bottom = 30.dp, top = 10.dp),
                     ) {
                         PocPdvTextField(
                             label = stringResource(Res.string.receipt_id_label),
                             value = state.receiptId,
-                            onValueChange = { onAction(FindSaleAction.OnReceiptIdChanged(it)) },
+                            onValueChange = { },
                             placeholder = stringResource(Res.string.receipt_id_placeholder),
                             modifier = Modifier.fillMaxWidth(),
                             readOnly = true,
@@ -143,23 +159,15 @@ fun FindSaleScreen(
                                 )
                             }
                         )
-                        PocPdvDatePicker(
-                            label = stringResource(Res.string.sale_date_label),
-                            selectedDate = state.saleDate,
-                            onSelectedDateChange = { },
-                            modifier = Modifier.fillMaxWidth(),
-                        )
-
                     }
                 }
             }
-            Spacer(Modifier.height(22.dp))
             Column(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.weight(1f).fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 VirtualKeypad(
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier.padding(bottom = 10.dp).weight(1f),
                     onNumberClick = { onAction(FindSaleAction.OnKeypadNumberClick(it)) },
                     onClearClick = { onAction(FindSaleAction.OnKeypadClearClick) },
                     onBackspaceClick = { onAction(FindSaleAction.OnKeypadBackspaceClick) }
@@ -167,7 +175,8 @@ fun FindSaleScreen(
                 PocPdvButton(
                     text = stringResource(Res.string.find_transaction_button),
                     icon = Icons.Default.Search,
-                    onClick = { onAction(FindSaleAction.OnFindTransactionClick)},
+                    enabled = state.receiptId.length > 5,
+                    onClick = { onAction(FindSaleAction.OnFindTransactionClick) },
                     modifier = Modifier.fillMaxWidth()
                 )
 
@@ -181,30 +190,11 @@ fun FindSaleScreen(
 private fun FindSaleScreenPreview() {
     PocPdvTheme {
         FindSaleScreen(
-            state = FindSaleState(currentStep = 1),
+            state = FindSaleState(),
+            snackbarHostState = remember { SnackbarHostState() },
             onAction = {}
         )
     }
 }
 
-@Preview
-@Composable
-private fun FindSaleScreenStep2Preview() {
-    PocPdvTheme {
-        FindSaleScreen(
-            state = FindSaleState(currentStep = 2),
-            onAction = {}
-        )
-    }
-}
 
-@Preview
-@Composable
-private fun FindSaleScreenStep3Preview() {
-    PocPdvTheme {
-        FindSaleScreen(
-            state = FindSaleState(currentStep = 3),
-            onAction = {}
-        )
-    }
-}

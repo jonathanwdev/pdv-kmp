@@ -36,7 +36,6 @@ import com.poc.core.designsystem.components.common.Separator
 import com.poc.core.designsystem.theme.PocPdvTheme
 import com.poc.feature.transaction.components.Metadata
 import com.poc.feature.transaction.components.SaleStatusChip
-import com.poc.feature.transaction.components.SaleStatusChipEnum
 import com.poc.feature.transaction.components.TransactionDetailListItem
 import com.poc.feature.transaction.components.TransactionDetailsBottomBar
 import com.poc.feature.transaction.components.TransactionDetailsTopBar
@@ -56,8 +55,10 @@ import pocpdv.feature.transaction.generated.resources.transaction_id
 
 @Composable
 fun TransactionDetailsRoot(
+    transactionId: Long,
     viewModel: TransactionDetailsViewModel = koinViewModel(),
-    onNavigateBackToTransactions: () -> Unit
+    onNavigateBackToTransactions: () -> Unit,
+    onNavigateBackToHome: () -> Unit,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -65,7 +66,8 @@ fun TransactionDetailsRoot(
         state = state,
         onAction ={ action ->
             when(action) {
-                TransactionDetailsAction.NavigateBack -> onNavigateBackToTransactions()
+                TransactionDetailsAction.OnNavigateBack -> onNavigateBackToTransactions()
+                TransactionDetailsAction.OnGoHomeClick -> onNavigateBackToHome()
                 else -> Unit
             }
             viewModel.onAction(action)
@@ -84,13 +86,13 @@ fun TransactionDetailsScreen(
         containerColor = MaterialTheme.colorScheme.surfaceVariant,
         topBar = {
             TransactionDetailsTopBar(
-                onNavigateBack = { onAction(TransactionDetailsAction.NavigateBack) }
+                onNavigateBack = { onAction(TransactionDetailsAction.OnNavigateBack) }
             )
         },
         bottomBar = {
             TransactionDetailsBottomBar(
-                onReprintClick = { onAction(TransactionDetailsAction.ReprintReceipt) },
-                onIssueRefoundClick = { onAction(TransactionDetailsAction.IssueRefund) }
+                onReprintClick = { onAction(TransactionDetailsAction.OnReprintReceipt) },
+                onGoHomeClick = { onAction(TransactionDetailsAction.OnGoHomeClick) }
             )
         }
     ) { padding ->
@@ -128,7 +130,7 @@ fun TransactionDetailsScreen(
                             )
                         }
                         SaleStatusChip(
-                            status = SaleStatusChipEnum.COMPLETED
+                            status = state.status
                         )
                     }
                     Separator(Modifier.padding(vertical = 16.dp))
@@ -136,13 +138,13 @@ fun TransactionDetailsScreen(
                         Metadata(
                             icon = Icons.Outlined.CalendarToday,
                             label = stringResource(Res.string.date),
-                            value = state.date,
+                            value = state.dateFormatted,
                             modifier = Modifier.weight(1f)
                         )
                         Metadata(
                             icon = Icons.Outlined.Schedule,
                             label = stringResource(Res.string.time),
-                            value = state.time,
+                            value = state.timeFormatted,
                             modifier = Modifier.weight(1f)
                         )
                     }
@@ -194,11 +196,11 @@ fun TransactionDetailsScreen(
                     modifier = Modifier.padding(20.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    SummaryRow(stringResource(Res.string.subtotal), "$${state.subtotal}")
-                    SummaryRow(stringResource(Res.string.tax), "$${state.tax}")
+                    SummaryRow(stringResource(Res.string.subtotal), state.subtotalFormatted)
+                    SummaryRow(stringResource(Res.string.tax), state.taxFormatted)
                     SummaryRow(
-                        label = "${stringResource(Res.string.discount)} (${state.discountLabel})",
-                        value = "-$${state.discount}",
+                        label = stringResource(Res.string.discount),
+                        value = "0",
                         valueColor = MaterialTheme.colorScheme.error
                     )
                     Separator()
@@ -213,7 +215,7 @@ fun TransactionDetailsScreen(
                             fontWeight = FontWeight.Bold
                         )
                         Text(
-                            text = "$${state.total}",
+                            text = state.totalFormatted,
                             style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.tertiary

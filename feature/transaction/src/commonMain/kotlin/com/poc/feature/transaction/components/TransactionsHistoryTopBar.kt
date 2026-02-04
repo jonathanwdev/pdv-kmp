@@ -17,6 +17,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,46 +35,44 @@ fun TransactionsHistoryTopBar(
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit,
 ) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp)
-            .padding(top = 16.dp, bottom = 8.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Button(
-            onClick = onBackClick,
-            colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent, contentColor = MaterialTheme.colorScheme.tertiary),
-            contentPadding = PaddingValues(0.dp),
-            modifier = Modifier.height(48.dp)
-        ) {
-            Icon(
-                Icons.Default.ChevronLeft,
-                contentDescription = null,
-                modifier = Modifier.size(28.dp)
-            )
-            Text(
-                text = stringResource(Res.string.back),
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Medium
-            )
+    TopAppBar(
+        title = {
+            Button(
+                onClick = onBackClick,
+                colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent, contentColor = MaterialTheme.colorScheme.tertiary),
+                contentPadding = PaddingValues(0.dp),
+                modifier = Modifier.height(48.dp)
+            ) {
+                Icon(
+                    Icons.Default.ChevronLeft,
+                    contentDescription = null,
+                    modifier = Modifier.size(28.dp)
+                )
+                Text(
+                    text = stringResource(Res.string.back),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Medium
+                )
+            }
+        },
+        actions = {
+            Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                Icon(
+                    Icons.Filled.Share,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.size(24.dp)
+                )
+                Icon(
+                    Icons.Filled.MoreHoriz,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
         }
-        Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-            Icon(
-                Icons.Filled.Share,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.size(24.dp)
-            )
-            Icon(
-                Icons.Filled.MoreHoriz,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.size(24.dp)
-            )
-        }
-    }
+    )
+
 
 
 }

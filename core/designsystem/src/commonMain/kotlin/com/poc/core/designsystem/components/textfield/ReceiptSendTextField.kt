@@ -30,6 +30,8 @@ fun ReceiptSendTextField(
     modifier: Modifier = Modifier,
     leadingIcon: @Composable (() -> Unit)? = null,
     placeholder: String,
+    onSendClick: () -> Unit,
+    enabled: Boolean = true,
     onValueChange: (String) -> Unit,
     value: String,
 ) {
@@ -40,6 +42,7 @@ fun ReceiptSendTextField(
             .height(56.dp),
         shape = RoundedCornerShape(12.dp),
         leadingIcon = leadingIcon,
+        enabled = enabled,
         placeholder = {
             Text(
                 text = placeholder,
@@ -57,7 +60,10 @@ fun ReceiptSendTextField(
         textStyle = LocalTextStyle.current.copy(fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurface),
         trailingIcon = {
             Button(
-                onClick = {  },
+                enabled = enabled,
+                onClick = {
+                    onSendClick()
+                },
                 modifier = Modifier
                     .height(36.dp)
                     .padding(end = 6.dp),
@@ -85,6 +91,21 @@ private fun ReceiptSendTextFieldPreview() {
         ReceiptSendTextField(
             value = "",
             onValueChange = {},
+            onSendClick = {},
+            placeholder = "Enter email address",
+        )
+    }
+}
+
+@Composable
+@Preview
+private fun ReceiptSendTextFieldDisabledPreview() {
+    PocPdvTheme {
+        ReceiptSendTextField(
+            value = "",
+            enabled = false,
+            onValueChange = {},
+            onSendClick = {},
             placeholder = "Enter email address",
         )
     }

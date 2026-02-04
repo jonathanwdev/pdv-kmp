@@ -11,10 +11,10 @@ fun SaleItemEntity.toDomain(): SaleItem {
         productSku = productSku,
         imageUrl = imageUrl,
         saleId = saleId,
-        isExchanged = isExchanged,
         name = name,
         totalPrice = totalPrice,
-        tax = tax
+        tax = tax,
+        returnedQuantity = returnedQuantity
     )
 }
 
@@ -26,9 +26,9 @@ fun SaleItem.toEntity(): SaleItemEntity {
         productSku = productSku,
         imageUrl = imageUrl,
         saleId = saleId,
-        isExchanged = isExchanged,
         name = name,
         totalPrice = totalPrice,
         tax = tax,
+        returnedQuantity = returnedQuantity
     )
 }

@@ -6,14 +6,6 @@ import androidx.room.PrimaryKey
 
 @Entity(
     tableName = "exchanges",
-    foreignKeys = [
-        ForeignKey(
-            entity = SaleEntity::class,
-            parentColumns = ["saleId"],
-            childColumns = ["originalSaleId"],
-            onDelete = ForeignKey.SET_NULL
-        )
-    ]
 )
 data class ExchangeEntity(
     @PrimaryKey()

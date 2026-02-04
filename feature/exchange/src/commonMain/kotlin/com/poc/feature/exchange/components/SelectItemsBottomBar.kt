@@ -32,7 +32,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.poc.core.designsystem.components.avatars.ProductAvatar
-import com.poc.feature.exchange.screens.selectItems.ReturnItem
+import com.poc.core.designsystem.components.buttons.PocPdvButton
+import com.poc.core.designsystem.theme.PocPdvTheme
+import com.poc.feature.exchange.models.ExchangeItemUI
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import pocpdv.feature.exchange.generated.resources.Res
@@ -43,7 +45,9 @@ import pocpdv.feature.exchange.generated.resources.value_of_returns
 @Composable
 fun SelectItemsBottomBar(
     modifier: Modifier = Modifier,
-    selectedItems: List<ReturnItem>,
+    totalValueFormatted: String,
+    enabledButton: Boolean,
+    selectedItems: List<ExchangeItemUI>,
     onConfirmClick: () -> Unit
 ) {
     Surface(
@@ -61,7 +65,7 @@ fun SelectItemsBottomBar(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 24.dp, vertical = 24.dp)
-                .padding(bottom = 24.dp),
+                .padding(bottom = 30.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Row(
@@ -78,7 +82,7 @@ fun SelectItemsBottomBar(
                         letterSpacing = 1.sp
                     )
                     Text(
-                        text = "$100",
+                        text = totalValueFormatted,
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
@@ -127,45 +131,28 @@ fun SelectItemsBottomBar(
                     }
                 }
             }
-            Button(
+            PocPdvButton(
+                modifier = Modifier.fillMaxWidth(),
+                icon = Icons.AutoMirrored.Filled.ArrowForwardIos,
+                enabled = enabledButton,
+                text = stringResource(Res.string.select_replacement_items),
                 onClick = {
                     onConfirmClick()
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp)
-                    .shadow(
-                        4.dp,
-                        RoundedCornerShape(12.dp),
-                        ambientColor = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.2f)
-                    ),
-                shape = RoundedCornerShape(12.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.tertiary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary
-                )
-            ) {
-                Text(
-                    text = stringResource(Res.string.select_replacement_items),
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold
-                )
-                Spacer(Modifier.width(8.dp))
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
-                    contentDescription = null,
-                    modifier = Modifier.size(14.dp)
-                )
-            }
+                }
+            )
         }
     }
 }
 
 @Composable
 @Preview
-private fun SelectItemsBottomBarPreview() {    
-    SelectItemsBottomBar(
-        selectedItems = emptyList(),
-        onConfirmClick = {}
-    )
+private fun SelectItemsBottomBarPreview() {
+    PocPdvTheme {
+        SelectItemsBottomBar(
+            selectedItems = emptyList(),
+            onConfirmClick = {},
+            enabledButton =  true,
+            totalValueFormatted = "$100.00"
+        )
+    }
 }

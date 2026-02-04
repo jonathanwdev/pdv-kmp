@@ -35,40 +35,49 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.poc.core.designsystem.components.buttons.PocPdvButton
 import com.poc.core.designsystem.components.common.Separator
 import com.poc.core.designsystem.theme.PocPdvTheme
+import com.poc.core.presentation.utils.ObserveAsEvent
 import com.poc.feature.exchange.components.ExchangeSteps
 import com.poc.feature.exchange.components.ExchangeTopAppBar
 import com.poc.feature.exchange.components.ReturnItemCard
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.scope.Scope
 import pocpdv.feature.exchange.generated.resources.Res
-import pocpdv.feature.exchange.generated.resources.balance_due_from_customer_label
+import pocpdv.feature.exchange.generated.resources.balance_returned
 import pocpdv.feature.exchange.generated.resources.complete_exchange_button
 import pocpdv.feature.exchange.generated.resources.exchange_summary_title
 import pocpdv.feature.exchange.generated.resources.returned_items_section_title
-import pocpdv.feature.exchange.generated.resources.subtotal_returned_label
+import pocpdv.feature.exchange.generated.resources.total_Sale_label
 import pocpdv.feature.exchange.generated.resources.transaction_id_label
 
 @Composable
 fun SummaryRoot(
-    viewModel: SummaryViewModel = koinViewModel<SummaryViewModel>(),
+    koinScope: Scope,
+    viewModel: SummaryViewModel = koinViewModel<SummaryViewModel>(scope = koinScope),
     onNavigateBack: () -> Unit,
     onNavigateToHome: () -> Unit,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
+    ObserveAsEvent(viewModel.event) { event ->
+        when (event) {
+            SummaryEvent.OnExchangeSuccess -> onNavigateToHome()
+            SummaryEvent.OnExchangeError -> Unit
+        }
+    }
+
     SummaryScreen(
         state = state,
         onAction = { action ->
-            when(action) {
-                SummaryAction.NavigateBack -> onNavigateBack()
-                SummaryAction.CompleteExchange -> onNavigateToHome()
-                else -> viewModel.onAction(action)
+            when (action) {
+                SummaryAction.OnBackClick -> onNavigateBack()
+                else -> Unit
             }
+            viewModel.onAction(action)
         }
     )
 }
@@ -85,7 +94,7 @@ fun SummaryScreen(
             ExchangeTopAppBar(
                 text = stringResource(Res.string.exchange_summary_title),
                 onBackClick = {
-                    onAction(SummaryAction.NavigateBack)
+                    onAction(SummaryAction.OnBackClick)
                 }
             )
         },
@@ -105,14 +114,14 @@ fun SummaryScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(24.dp)
-                        .padding(bottom = 24.dp),
+                        .padding(bottom = 30.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     PocPdvButton(
                         modifier = Modifier.fillMaxWidth(),
                         text = stringResource(Res.string.complete_exchange_button),
                         icon = Icons.Default.CheckCircle,
-                        onClick = { onAction(SummaryAction.CompleteExchange) }
+                        onClick = { onAction(SummaryAction.OnCompleteExchangeClick) }
                     )
 
                 }
@@ -123,14 +132,17 @@ fun SummaryScreen(
             modifier = Modifier
                 .padding(paddingValues)
                 .padding(horizontal = 16.dp)
+                .padding(top = 16.dp),
         ) {
-            ExchangeSteps(currentStep = state.currentStep)
+            ExchangeSteps(currentStep = 3)
             LazyColumn(
                 modifier = Modifier.weight(1f),
             ) {
                 item {
                     Column(
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colorScheme.surfaceVariant)
                     ) {
                         Row(
                             modifier = Modifier
@@ -147,7 +159,7 @@ fun SummaryScreen(
                                 letterSpacing = 0.5.sp
                             )
                             Text(
-                                text = "-$${state.subtotalReturned}",
+                                text = "-${state.totalValueOfReturnFormatted}",
                                 style = MaterialTheme.typography.bodySmall,
                                 fontWeight = FontWeight.SemiBold,
                                 color = MaterialTheme.colorScheme.error,
@@ -163,10 +175,10 @@ fun SummaryScreen(
                 }
                 items(state.returnedItems) { item ->
                     ReturnItemCard(
-                        isCheckable = false,
-                        isChecked = true,
+                        isSummary = true,
                         item = item,
-                        onToggleSelection = {  }
+                        onAddItemClick = {},
+                        onRemoveItemClick = {}
                     )
                     Spacer(Modifier.height(12.dp))
                 }
@@ -196,51 +208,32 @@ fun SummaryScreen(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = stringResource(Res.string.subtotal_returned_label),
+                                text = stringResource(Res.string.total_Sale_label),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = Color.White.copy(alpha = 0.7f)
                             )
                             Text(
-                                text = "$${state.subtotalReturned}",
+                                text = state.totalValueOfSaleFormatted,
                                 style = MaterialTheme.typography.bodySmall,
                                 fontWeight = FontWeight.Medium,
                                 color = Color.White
                             )
                         }
-                        Spacer(Modifier.height(16.dp))
+                        Spacer(Modifier.height(26.dp))
                         Separator()
-                        Spacer(Modifier.height(16.dp))
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = stringResource(Res.string.subtotal_returned_label),
-                                style = MaterialTheme.typography.bodySmall,
-                                color = Color.White.copy(alpha = 0.7f)
-                            )
-                            Text(
-                                text = "$${state.subtotalReturned}",
-                                style = MaterialTheme.typography.bodySmall,
-                                fontWeight = FontWeight.Medium,
-                                color = Color.White
-                            )
-                        }
-                        Spacer(Modifier.height(24.dp))
+                        Spacer(Modifier.height(26.dp))
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             Text(
-                                text = stringResource(Res.string.balance_due_from_customer_label),
+                                text = stringResource(Res.string.balance_returned),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = Color.White.copy(alpha = 0.7f),
                                 modifier = Modifier.padding(bottom = 4.dp)
                             )
                             Text(
-                                text = "$${state.balanceDue}",
+                                text = state.totalValueOfReturnFormatted,
                                 style = MaterialTheme.typography.displaySmall,
                                 fontSize = 36.sp,
                                 fontWeight = FontWeight.Bold,
@@ -255,7 +248,7 @@ fun SummaryScreen(
             }
             Spacer(Modifier.height(20.dp))
             Text(
-                text = "${stringResource(Res.string.transaction_id_label)}: ${state.transactionId}\n${state.transactionDateTime}",
+                text = "${stringResource(Res.string.transaction_id_label)}: ${state.transactionId}\n${state.formattedDate}",
                 style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = .6f),
                 textAlign = TextAlign.Center,
@@ -277,7 +270,7 @@ fun SummaryScreen(
 private fun SummaryScreenPreview() {
     PocPdvTheme {
         SummaryScreen(
-            state = SummaryState(currentStep = 3),
+            state = SummaryState(),
             onAction = {}
         )
     }

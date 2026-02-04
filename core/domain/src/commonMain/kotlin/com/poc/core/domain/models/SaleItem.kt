@@ -6,9 +6,9 @@ data class SaleItem(
     val saleId: Long,
     val productSku: Int,
     val quantity: Int,
+    val returnedQuantity: Int,
     val imageUrl: String,
     val price: Double,
     val totalPrice: Double,
     val tax: Double,
-    val isExchanged: Boolean
 )

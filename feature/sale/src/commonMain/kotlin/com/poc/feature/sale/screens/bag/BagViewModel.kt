@@ -6,10 +6,12 @@ import com.poc.core.domain.repository.ProductRepository
 import com.poc.core.presentation.format.formatMoney
 import com.poc.feature.sale.mappers.toSaleItemUi
 import com.poc.feature.sale.models.SaleFlowData
-import com.poc.feature.sale.models.SaleItemUI
+import com.poc.core.domain.models.SaleItemUI
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -19,6 +21,9 @@ class BagViewModel(
     private val saleFlowData: SaleFlowData,
     private val productRepository: ProductRepository
 ) : ViewModel() {
+    private val _event = Channel<BagEvent>()
+    val event = _event.receiveAsFlow()
+
     private var hasLoadedInitialData = false
 
     private val _state = MutableStateFlow(BagState())
@@ -61,6 +66,7 @@ class BagViewModel(
 
 
     private fun findProductBySku() {
+        if(_state.value.productSku.isBlank()) return
         viewModelScope.launch {
             productRepository
                 .getProductBySkuLocal(_state.value.productSku)
@@ -81,6 +87,7 @@ class BagViewModel(
                         }
                     },
                     onFailure = {
+                        _event.send(BagEvent.OnFindProductError)
                         _state.update { prevState ->
                             prevState.copy(
                                 productSku = ""

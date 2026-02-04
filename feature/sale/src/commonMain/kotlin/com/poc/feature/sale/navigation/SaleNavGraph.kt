@@ -111,7 +111,6 @@ fun NavGraphBuilder.saleNavGraph(
                 onNavigateBackToHome = {
                     onNavigateBackToHome()
                     koin.clearSaleScope()
-
                 },
             )
         }

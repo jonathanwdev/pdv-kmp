@@ -1,16 +1,22 @@
 package com.poc.feature.exchange.screens.summary
 
-import com.poc.feature.exchange.screens.selectItems.ReturnItem
-import com.poc.feature.exchange.screens.selectItems.returnItemsMock
+import com.poc.core.presentation.format.DateFormat
+import com.poc.core.presentation.format.formatMoney
+import com.poc.feature.exchange.models.ExchangeItemUI
+import kotlin.time.Instant
+
 
 data class SummaryState(
-    val currentStep: Int = 3,
-    val returnedItems: List<ReturnItem> = returnItemsMock,
-    val subtotalReturned: Double = 70.00,
-    val subtotalNew: Double = 125.00,
-    val balanceDue: Double = 55.00,
-    val transactionId: String = "TXN-82910-002",
-    val transactionDateTime: String = "Oct 24, 2023 • 14:22 PM"
-)
+    val subtotalReturned: Double = 0.0,
+    val totalValueOfSale: Double = 0.0,
+    val totalValueOfSaleFormatted: String = "",
+    val totalValueOfReturnFormatted: String = "",
+    val transactionId: String = "",
+    val transactionTimestamp: Long = 0L,
+    val returnedItems: List<ExchangeItemUI> = emptyList()
+) {
+    val formattedDate = DateFormat.formatTransactionDateWithDay(Instant.fromEpochMilliseconds(this.transactionTimestamp))
+
+}
 
 

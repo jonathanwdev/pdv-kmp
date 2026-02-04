@@ -93,8 +93,7 @@ fun SummaryScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 12.dp, vertical = 24.dp)
-                .imePadding(),
+                .padding(horizontal = 12.dp, vertical = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween
         ) {
@@ -231,7 +230,13 @@ fun SummaryScreen(
                     ReceiptSendTextField(
                         modifier = Modifier.fillMaxWidth(),
                         value = state.userEmail,
-                        onValueChange = {},
+                        onValueChange = {
+                            onAction(SummaryAction.OnEmailChange(it))
+                        },
+                        onSendClick = {
+                            onAction(SummaryAction.OnSendClick)
+                        },
+                        enabled = !state.isSent,
                         placeholder = stringResource(Res.string.enter_email_address)
                     )
                     Spacer(Modifier.height(16.dp))
@@ -239,6 +244,7 @@ fun SummaryScreen(
 
                     }
                 }
+
             }
             Column(
                 modifier = Modifier
@@ -254,6 +260,8 @@ fun SummaryScreen(
                 )
 
             }
+            Spacer(Modifier.height(20.dp))
+
         }
     }
 }

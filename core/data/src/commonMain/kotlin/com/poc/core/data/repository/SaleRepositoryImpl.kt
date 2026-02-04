@@ -13,12 +13,26 @@ import kotlinx.coroutines.supervisorScope
 
 class SaleRepositoryImpl(
     private val database: PocPdvDatabase,
-): SaleRepository {
-    override fun findAllSalesWithItems(): Flow<List<Sale>> {
-        return database.saleDao.findAllSalesWithProducts().map { allSales ->
+) : SaleRepository {
+    override fun findAllSalesWithItemsFlow(): Flow<List<Sale>> {
+        return database.saleDao.findAllSalesWithProductsFlow().map { allSales ->
             supervisorScope {
                 allSales.map { it.toDomain() }
             }
+        }
+    }
+
+    override suspend fun findSaleById(saleId: Long): Result<Sale> {
+        return runCatching {
+            val sale = database.saleDao.findSaleBySaleId(saleId)
+            sale?.toDomain(emptyList()) ?: throw Exception("Sale not found")
+        }
+    }
+
+    override suspend fun findSaleWithItemsById(saleId: Long): Result<Sale> {
+        return runCatching {
+            val sale = database.saleDao.findSaleWithProductsById(saleId)
+            sale?.toDomain() ?: throw Exception("Sale not found")
         }
     }
 

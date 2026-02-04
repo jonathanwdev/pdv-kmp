@@ -28,8 +28,9 @@
     <string name="exchange_summary_title">Exchange Summary</string>
     <string name="summary_step_description">Step %1$d of %2$d: Summary &amp; Balance</string>
     <string name="returned_items_section_title">Returned Items</string>
-    <string name="subtotal_returned_label">Subtotal Returned</string>
-    <string name="subtotal_returned_new">Subtotal New</string>
-    <string name="balance_due_from_customer_label">Balance Due from Customer</string>
+    <string name="total_Sale_label">Total Sale Value</string>
+    <string name="balance_returned">Balance Returned</string>
     <string name="complete_exchange_button">Complete Exchange</string>
+    <string name="sale_not_found">Sale not found !</string>
+    <string name="exchanged">EXCHANGED</string>
 </resources>

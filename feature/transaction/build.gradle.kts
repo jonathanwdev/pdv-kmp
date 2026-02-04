@@ -14,8 +14,8 @@ kotlin {
                 implementation(libs.bundles.koin.common)
                 implementation(compose.components.resources)
                 implementation(compose.components.uiToolingPreview)
-                implementation(libs.coil.compose)
-                implementation(libs.coil.network.ktor)
+                implementation(libs.compottie)
+                implementation(libs.kotlinx.datetime)
             }
         }
 

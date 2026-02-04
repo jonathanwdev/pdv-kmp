@@ -31,7 +31,10 @@ import pocpdv.feature.transaction.generated.resources.you_ve_reached_percent_of_
 
 @Composable
 fun SummaryTransactionCard(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    dailyGoalFormatted: String,
+    totalValueFormatted: String ,
+    dailyPercentageAchieved: Float
 ) {
     Card(
         modifier = modifier
@@ -68,13 +71,13 @@ fun SummaryTransactionCard(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(
-                    text = "$1,452.80",
+                    text = totalValueFormatted,
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.surface
                 )
                 Text(
-                    text = "+12.5%",
+                    text = "of $dailyGoalFormatted",
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Medium,
                     color = MaterialTheme.colorScheme.primary
@@ -82,7 +85,7 @@ fun SummaryTransactionCard(
             }
 
             LinearProgressIndicator(
-                progress = 0.75f,
+                progress = dailyPercentageAchieved,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(6.dp),
@@ -91,7 +94,7 @@ fun SummaryTransactionCard(
             )
 
             Text(
-                text = stringResource(Res.string.you_ve_reached_percent_of_your_daily_goal, 75),
+                text = stringResource(Res.string.you_ve_reached_percent_of_your_daily_goal, (dailyPercentageAchieved * 100).toInt()),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.inverseOnSurface
             )
@@ -103,6 +106,10 @@ fun SummaryTransactionCard(
 @Preview
 private fun SummaryTransactionCardPreview() {
     PocPdvTheme {
-        SummaryTransactionCard()
+        SummaryTransactionCard(
+            dailyGoalFormatted = "R$ 2.000,00",
+            dailyPercentageAchieved = 0.75f,
+            totalValueFormatted = "R$ 1.000,00"
+        )
     }
 }

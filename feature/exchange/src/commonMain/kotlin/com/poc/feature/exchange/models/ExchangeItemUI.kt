@@ -1,10 +1,11 @@
-package com.poc.feature.sale.models
+package com.poc.feature.exchange.models
 
-
-data class SaleItemUI(
+data class ExchangeItemUI(
+    val itemId: Long,
     val productSku: Int,
     val name: String,
-    val quantity: Int,
+    val maxQuantity: Int,
+    val quantitySelected: Int,
     val imageUrl: String,
     val totalPrice: Double,
     val totalPriceFormatted: String,

@@ -28,6 +28,10 @@
     <string name="print_receipt">Print Receipt</string>
     <string name="start_new_sale">Start New Sale</string>
     <string name="return_to_home">Return to Home</string>
+    <string name="product_not_found">Product not found</string>
+    <string name="add">ADD</string>
+
+
 
 
 </resources>

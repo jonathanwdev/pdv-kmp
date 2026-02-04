@@ -3,22 +3,8 @@ package com.poc.feature.sale.mappers
 import com.poc.core.domain.models.Product
 import com.poc.core.domain.models.SaleItem
 import com.poc.core.presentation.format.formatMoney
-import com.poc.feature.sale.models.SaleItemUI
+import com.poc.core.domain.models.SaleItemUI
 
-fun SaleItem.toUi(): SaleItemUI {
-    return SaleItemUI(
-        productSku = productSku,
-        quantity = quantity,
-        imageUrl = imageUrl,
-        totalPrice = totalPrice,
-        totalPriceFormatted = totalPrice.formatMoney(),
-        unitPrice = price,
-        unitPriceFormatted = price.formatMoney(),
-        name = name,
-        tax = tax,
-        taxFormatted = tax.formatMoney()
-    )
-}
 
 fun SaleItemUI.toSaleItem(
     saleId: Long
@@ -32,8 +18,8 @@ fun SaleItemUI.toSaleItem(
         name = name,
         tax = tax,
         saleId = saleId,
-        isExchanged = false,
-        itemId = 0L
+        itemId = 0L,
+        returnedQuantity = 0
     )
 }
 

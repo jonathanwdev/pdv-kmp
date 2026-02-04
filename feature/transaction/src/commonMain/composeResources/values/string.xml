@@ -10,6 +10,7 @@
     <string name="time">Time</string>
     <string name="cashier">Cashier</string>
     <string name="items_purchased">Items Purchased</string>
+    <string name="items_exchanged">Items Exchanged</string>
     <string name="subtotal">Subtotal</string>
     <string name="tax">Tax</string>
     <string name="discount">Discount</string>
@@ -18,4 +19,5 @@
     <string name="issue_refund">Issue Refund</string>
     <string name="total_amount">Total Amount</string>
     <string name="completed">Completed</string>
+    <string name="go_home">Go Home</string>
 </resources>

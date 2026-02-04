@@ -10,8 +10,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -19,20 +21,28 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.QrCodeScanner
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.poc.core.designsystem.components.avatars.ProductAvatar
 import com.poc.core.designsystem.components.buttons.PocPdvButton
@@ -40,8 +50,11 @@ import com.poc.core.designsystem.components.buttons.SumButton
 import com.poc.core.designsystem.components.buttons.SumButtonVariant
 import com.poc.core.designsystem.components.textfield.PocPdvTextField
 import com.poc.core.designsystem.theme.PocPdvTheme
+import com.poc.core.designsystem.theme.secondaryGreen
+import com.poc.core.presentation.utils.ObserveAsEvent
 import com.poc.feature.sale.components.SalePriceDescriptionBox
 import com.poc.feature.sale.components.SaleTopBar
+import designsystem.resources.send
 import io.github.alexzhirkevich.compottie.Compottie
 import io.github.alexzhirkevich.compottie.LottieCompositionSpec
 import io.github.alexzhirkevich.compottie.animateLottieCompositionAsState
@@ -54,7 +67,9 @@ import org.koin.core.scope.Scope
 import pocpdv.feature.sale.generated.resources.Res
 import pocpdv.feature.sale.generated.resources.charge_btn_with_price
 import pocpdv.feature.sale.generated.resources.new_sale
+import pocpdv.feature.sale.generated.resources.product_not_found
 import pocpdv.feature.sale.generated.resources.scan_product
+
 
 @Composable
 fun BagRoot(
@@ -63,10 +78,25 @@ fun BagRoot(
     onNavigateBackToHome: () -> Unit,
     viewModel: BagViewModel = koinViewModel<BagViewModel>(scope = koinScope)
 ) {
+    val keyboardController = LocalSoftwareKeyboardController.current
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    val productNotFoundMessage = stringResource(Res.string.product_not_found)
+
+    ObserveAsEvent(viewModel.event) { event -> 
+        when(event) {
+            BagEvent.OnFindProductError -> {
+                keyboardController?.hide()
+                snackbarHostState.showSnackbar(productNotFoundMessage)
+            }
+        }
+
+    }
 
     BagScreen(
         state = state,
+        snackbarHostState = snackbarHostState,
         onAction = { action ->
             when (action) {
                 BagAction.OnChargeClick -> {
@@ -85,11 +115,12 @@ fun BagRoot(
 @Composable
 fun BagScreen(
     state: BagState,
+    snackbarHostState: SnackbarHostState,
     onAction: (BagAction) -> Unit,
 ) {
     val composition by rememberLottieComposition {
         LottieCompositionSpec.JsonString(
-            Res.readBytes("drawable/empty.json").decodeToString()
+            designsystem.resources.Res.readBytes("drawable/empty.json").decodeToString()
         )
     }
     val progress by animateLottieCompositionAsState(
@@ -106,7 +137,8 @@ fun BagScreen(
                 },
                 title = "${stringResource(Res.string.new_sale)} #${state.saleId}"
             )
-        }
+        },
+        snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { paddingValues ->
         Column(
             modifier = Modifier.padding(paddingValues)
@@ -119,14 +151,27 @@ fun BagScreen(
                 value = state.productSku,
                 placeholder = stringResource(Res.string.scan_product),
                 trailingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.QrCodeScanner,
-                        tint = MaterialTheme.colorScheme.primary,
-                        contentDescription = null,
-                        modifier = Modifier.clickable {
+                    Button(
+                        onClick = {
                             onAction(BagAction.OnSearchProduct)
-                        }
-                    )
+                        },
+                        modifier = Modifier
+                            .height(36.dp)
+                            .padding(end = 6.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = secondaryGreen,
+                            contentColor = Color(0xFF065f46)
+                        ),
+                        shape = RoundedCornerShape(8.dp),
+                        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 0.dp)
+                    ) {
+                        Text(
+                            text = stringResource(designsystem.resources.Res.string.send),
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    }
+
                 },
                 onValueChange = {
                     onAction(BagAction.OnChangeSkuInput(it))
@@ -254,6 +299,7 @@ fun BagScreen(
                     }
                 )
             }
+            Spacer(Modifier.height(15.dp))
         }
     }
 }
@@ -264,6 +310,7 @@ private fun Preview() {
     PocPdvTheme {
         BagScreen(
             state = BagState(),
+            snackbarHostState = remember { SnackbarHostState() },
             onAction = {}
         )
     }

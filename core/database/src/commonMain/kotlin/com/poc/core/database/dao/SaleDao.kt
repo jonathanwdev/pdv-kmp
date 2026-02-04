@@ -17,11 +17,18 @@ interface SaleDao {
     fun findAllSales(): Flow<List<SaleEntity>>
 
     @Query("SELECT * FROM sales WHERE saleId = :saleId")
-    fun findSaleBySaleId(saleId: Long): Flow<SaleEntity>
+    fun findSaleBySaleIdFlow(saleId: Long): Flow<SaleEntity>
+
+    @Query("SELECT * FROM sales WHERE saleId = :saleId")
+    suspend fun findSaleBySaleId(saleId: Long): SaleEntity?
 
     @Transaction
     @Query("SELECT * FROM sales")
-    fun findAllSalesWithProducts(): Flow<List<SaleWithProducts>>
+    fun findAllSalesWithProductsFlow(): Flow<List<SaleWithProducts>>
+
+    @Transaction
+    @Query("SELECT * FROM sales WHERE saleId = :saleId")
+    suspend fun findSaleWithProductsById(saleId: Long): SaleWithProducts?
 
     @Insert
     suspend fun insertSale(sale: SaleEntity): Long

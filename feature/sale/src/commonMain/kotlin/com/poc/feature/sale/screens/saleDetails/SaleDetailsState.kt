@@ -1,6 +1,6 @@
 package com.poc.feature.sale.screens.saleDetails
 
-import com.poc.feature.sale.models.SaleItemUI
+import com.poc.core.domain.models.SaleItemUI
 
 data class SaleDetailsState(
     val taxPercentage: Int = 7,

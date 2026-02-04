@@ -26,13 +26,6 @@ fun HomeTopBar(modifier: Modifier = Modifier) {
                 fontWeight = FontWeight.SemiBold
             )
         },
-        navigationIcon = {
-            Icon(
-                imageVector = Icons.Default.PointOfSale,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.tertiary
-            )
-        },
         actions = {
             Icon(
                 imageVector = Icons.Default.AccountBalanceWallet,
