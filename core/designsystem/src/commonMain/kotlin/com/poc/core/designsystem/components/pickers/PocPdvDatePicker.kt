@@ -2,10 +2,8 @@ package com.poc.core.designsystem.components.pickers
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarToday
-import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DisplayMode
@@ -81,7 +79,6 @@ fun PocPdvDatePicker(
             label = label,
             value = selectedDate?.let { it.toString() } ?: "",
             onValueChange = { },
-//        placeholder = stringResource(Res.string.receipt_id_placeholder),
             modifier = modifier,
             readOnly = true,
             trailingIcon = {

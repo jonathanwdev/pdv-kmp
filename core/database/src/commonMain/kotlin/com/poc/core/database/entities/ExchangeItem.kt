@@ -29,8 +29,8 @@ import androidx.room.PrimaryKey
 data class ExchangeItemEntity(
     @PrimaryKey(autoGenerate = true)
     val exchangeItemId: Long = 0,
-    val exchangeId: Long,       // Vincula ao evento de troca (cabeçalho)
-    val saleItemId: Long,       // Vincula ao item original vendido
+    val exchangeId: Long,
+    val saleItemId: Long,      
     val quantity: Int,          
     val creditValue: Double,
     val reason: String? = null
