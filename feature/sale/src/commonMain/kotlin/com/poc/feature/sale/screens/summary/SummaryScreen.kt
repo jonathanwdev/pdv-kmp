@@ -41,6 +41,7 @@ import com.poc.core.designsystem.components.common.Separator
 import com.poc.core.designsystem.components.textfield.ReceiptSendTextField
 import com.poc.core.designsystem.theme.PocPdvTheme
 import com.poc.core.presentation.utils.ObserveAsEvent
+import com.poc.core.presentation.utils.currentDeviceConfiguration
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
@@ -65,7 +66,7 @@ fun SummaryRoot(
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     ObserveAsEvent(viewModel.event) { event ->
-        when(event) {
+        when (event) {
             SummaryEvent.OnFinish -> {
                 onNavigateBackToHome()
             }
@@ -84,6 +85,7 @@ fun SummaryScreen(
     state: SummaryState,
     onAction: (SummaryAction) -> Unit,
 ) {
+    val currentDeviceConfiguration = currentDeviceConfiguration()
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -99,7 +101,7 @@ fun SummaryScreen(
         ) {
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(if (currentDeviceConfiguration.isMobile) 1f else 0.6f)
                     .weight(1f)
                     .padding(top = 24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -171,7 +173,6 @@ fun SummaryScreen(
                             )
                         }
                         Separator()
-
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -240,15 +241,13 @@ fun SummaryScreen(
                         placeholder = stringResource(Res.string.enter_email_address)
                     )
                     Spacer(Modifier.height(16.dp))
-                    PrinterButton {
-
-                    }
+                    PrinterButton {}
                 }
 
             }
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(if (currentDeviceConfiguration.isMobile) 1f else 0.6f)
                     .padding(bottom = 8.dp)
             ) {
                 PocPdvButton(

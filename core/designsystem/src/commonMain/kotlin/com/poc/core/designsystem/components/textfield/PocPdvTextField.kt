@@ -54,6 +54,7 @@ fun PocPdvTextField(
                     color = MaterialTheme.colorScheme.inverseOnSurface.copy(alpha = .4f),
                     shape = RoundedCornerShape(12.dp)
                 ),
+            textStyle = MaterialTheme.typography.bodyMedium,
             placeholder = {
                 placeholder?.let {
                     Text(
@@ -64,6 +65,7 @@ fun PocPdvTextField(
                 }
 
             },
+
             singleLine = true,
             shape = RoundedCornerShape(12.dp),
             trailingIcon = trailingIcon,

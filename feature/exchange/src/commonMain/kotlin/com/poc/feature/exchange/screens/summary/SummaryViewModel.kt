@@ -43,7 +43,6 @@ class SummaryViewModel(
 
     private fun populateState() {
         val exchangeFlow = exchangeFlowData.exchangeFlowState
-        println("****** exchangeFlow.selectedProducts"+ exchangeFlow.selectedProducts)
         _state.update {
             it.copy(
                 transactionId = TransactionIdFormat.transactionIdToSale(exchangeFlow.saleId),

@@ -16,8 +16,10 @@ fun main() {
                 width = 1200.dp,
                 height = 840.dp
             ),
+            resizable = false,
             onCloseRequest = ::exitApplication,
             title = "PocPdv",
+            alwaysOnTop = true
         ) {
             App()
         }

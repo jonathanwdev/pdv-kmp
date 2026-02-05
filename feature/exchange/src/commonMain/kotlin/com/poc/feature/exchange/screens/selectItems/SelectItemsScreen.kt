@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -26,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.poc.core.designsystem.theme.PocPdvTheme
 import com.poc.core.presentation.utils.ObserveAsEvent
+import com.poc.core.presentation.utils.currentDeviceConfiguration
 import com.poc.feature.exchange.components.ExchangeSteps
 import com.poc.feature.exchange.components.ExchangeTopAppBar
 import com.poc.feature.exchange.components.ReturnItemCard
@@ -50,7 +52,7 @@ fun SelectItemsRoot(
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     ObserveAsEvent(viewModel.event) { event ->
-        when(event) {
+        when (event) {
             SelectItemsEvent.OnSelectItemsSuccess -> onNavigateToSummary()
         }
     }
@@ -73,6 +75,7 @@ fun SelectItemsScreen(
     onAction: (SelectItemsAction) -> Unit,
 ) {
     val listToFooter by remember(state.selectedSaleProducts) { derivedStateOf { state.selectedSaleProducts.filter { it.quantitySelected > 0 } } }
+    val isMobile = currentDeviceConfiguration().isMobile
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.surfaceVariant,
@@ -97,62 +100,71 @@ fun SelectItemsScreen(
             modifier = Modifier
                 .padding(padding)
                 .padding(horizontal = 16.dp, vertical = 0.dp)
-                .padding(top = 16.dp),
+                .padding(top = 16.dp)
+                .fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            ExchangeSteps(currentStep = 2)
-            LazyColumn(
+            Column(
                 modifier = Modifier
-                    .weight(1f)
-            ) {
-                stickyHeader {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(MaterialTheme.colorScheme.surfaceVariant)
-                            .padding(horizontal = 4.dp)
-                            .padding(bottom = 16.dp)
-                            .padding(top = 16.dp)
-                    ) {
-                        Text(
-                            text = stringResource(Res.string.original_transaction_items),
-                            style = MaterialTheme.typography.labelLarge,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = .8f),
-                            letterSpacing = 1.sp
-                        )
-                        Text(
-                            text = "${stringResource(Res.string.transaction_id_label)}: ${state.transactionId}",
-                            style = MaterialTheme.typography.labelLarge,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = .6f),
-                            modifier = Modifier.padding(top = 2.dp)
-                        )
-                    }
-                }
-                items(state.selectedSaleProducts) { item ->
-                    ReturnItemCard(
-                        item = item,
-                        onAddItemClick = { sku ->
-                            onAction(SelectItemsAction.OnAddItemClick(sku))
-                        },
-                        onRemoveItemClick = { sku ->
-                            onAction(SelectItemsAction.OnRemoveItemClick(sku))
-                        }
-                    )
-                    Spacer(Modifier.height(12.dp))
-                }
+                    .fillMaxWidth(if (isMobile) 1f else 0.7f)
 
+            ) {
+                ExchangeSteps(currentStep = 2)
+                LazyColumn(
+                    modifier = Modifier
+                        .weight(1f)
+                ) {
+                    stickyHeader {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(MaterialTheme.colorScheme.surfaceVariant)
+                                .padding(horizontal = 4.dp)
+                                .padding(bottom = 16.dp)
+                                .padding(top = 16.dp)
+                        ) {
+                            Text(
+                                text = stringResource(Res.string.original_transaction_items),
+                                style = MaterialTheme.typography.labelLarge,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = .8f),
+                                letterSpacing = 1.sp
+                            )
+                            Text(
+                                text = "${stringResource(Res.string.transaction_id_label)}: ${state.transactionId}",
+                                style = MaterialTheme.typography.labelLarge,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = .6f),
+                                modifier = Modifier.padding(top = 2.dp)
+                            )
+                        }
+                    }
+                    items(state.selectedSaleProducts) { item ->
+                        ReturnItemCard(
+                            item = item,
+                            onAddItemClick = { sku ->
+                                onAction(SelectItemsAction.OnAddItemClick(sku))
+                            },
+                            onRemoveItemClick = { sku ->
+                                onAction(SelectItemsAction.OnRemoveItemClick(sku))
+                            }
+                        )
+                        Spacer(Modifier.height(12.dp))
+                    }
+
+                }
+                Text(
+                    text = stringResource(Res.string.return_window_note),
+                    style = MaterialTheme.typography.bodySmall.copy(lineHeight = 18.sp),
+                    fontStyle = FontStyle.Italic,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = .8f),
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp)
+                )
+                Spacer(Modifier.height(40.dp))
             }
-            Text(
-                text = stringResource(Res.string.return_window_note),
-                style = MaterialTheme.typography.bodySmall.copy(lineHeight = 18.sp),
-                fontStyle = FontStyle.Italic,
-                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = .8f),
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp)
-            )
-            Spacer(Modifier.height(40.dp))
+
         }
 
     }

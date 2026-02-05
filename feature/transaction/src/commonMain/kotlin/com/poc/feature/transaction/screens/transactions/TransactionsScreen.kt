@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -144,6 +145,7 @@ fun TransactionsScreen(
                                     horizontalAlignment = Alignment.CenterHorizontally
                                 ) {
                                     Image(
+                                        modifier = Modifier.heightIn(max = 420.dp),
                                         painter = rememberLottiePainter(
                                             composition = composition,
                                             progress = { progress },

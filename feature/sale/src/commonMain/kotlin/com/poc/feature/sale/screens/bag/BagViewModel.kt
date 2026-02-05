@@ -48,7 +48,6 @@ class BagViewModel(
         )
 
     private fun BagState.recalculateTotals(newItems: List<SaleItemUI>): BagState {
-        println(newItems)
         val totalWithTax = newItems.sumOf { it.totalPrice * it.quantity }
         val subtotal = newItems.sumOf { it.unitPrice * it.quantity }
         val totalTax = newItems.sumOf { it.tax * it.quantity }

@@ -39,6 +39,7 @@ import com.poc.core.designsystem.components.buttons.PocPdvButton
 import com.poc.core.designsystem.components.common.Separator
 import com.poc.core.designsystem.theme.PocPdvTheme
 import com.poc.core.presentation.utils.ObserveAsEvent
+import com.poc.core.presentation.utils.currentDeviceConfiguration
 import com.poc.feature.exchange.components.ExchangeSteps
 import com.poc.feature.exchange.components.ExchangeTopAppBar
 import com.poc.feature.exchange.components.ReturnItemCard
@@ -88,6 +89,7 @@ fun SummaryScreen(
     state: SummaryState,
     onAction: (SummaryAction) -> Unit,
 ) {
+    val isMobile = currentDeviceConfiguration().isMobile
     Scaffold(
         containerColor = MaterialTheme.colorScheme.surfaceVariant,
         topBar = {
@@ -118,7 +120,7 @@ fun SummaryScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     PocPdvButton(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth(if(isMobile) 1f else 0.7f),
                         text = stringResource(Res.string.complete_exchange_button),
                         icon = Icons.Default.CheckCircle,
                         onClick = { onAction(SummaryAction.OnCompleteExchangeClick) }
@@ -132,133 +134,141 @@ fun SummaryScreen(
             modifier = Modifier
                 .padding(paddingValues)
                 .padding(horizontal = 16.dp)
-                .padding(top = 16.dp),
+                .padding(top = 16.dp)
+                .fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            ExchangeSteps(currentStep = 3)
-            LazyColumn(
-                modifier = Modifier.weight(1f),
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth(if (isMobile) 1f else 0.7f)
             ) {
-                item {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(MaterialTheme.colorScheme.surfaceVariant)
-                    ) {
-                        Row(
+                ExchangeSteps(currentStep = 3)
+                LazyColumn(
+                    modifier = Modifier.weight(1f),
+                ) {
+                    item {
+                        Column(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(top = 16.dp, bottom = 8.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
+                                .background(MaterialTheme.colorScheme.surfaceVariant)
                         ) {
-                            Text(
-                                text = stringResource(Res.string.returned_items_section_title),
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.secondary,
-                                letterSpacing = 0.5.sp
-                            )
-                            Text(
-                                text = "-${state.totalValueOfReturnFormatted}",
-                                style = MaterialTheme.typography.bodySmall,
-                                fontWeight = FontWeight.SemiBold,
-                                color = MaterialTheme.colorScheme.error,
+                            Row(
                                 modifier = Modifier
-                                    .background(
-                                        MaterialTheme.colorScheme.error.copy(alpha = 0.1f),
-                                        CircleShape
-                                    )
-                                    .padding(horizontal = 8.dp, vertical = 4.dp)
-                            )
+                                    .fillMaxWidth()
+                                    .padding(top = 16.dp, bottom = 8.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = stringResource(Res.string.returned_items_section_title),
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.secondary,
+                                    letterSpacing = 0.5.sp
+                                )
+                                Text(
+                                    text = "-${state.totalValueOfReturnFormatted}",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = MaterialTheme.colorScheme.error,
+                                    modifier = Modifier
+                                        .background(
+                                            MaterialTheme.colorScheme.error.copy(alpha = 0.1f),
+                                            CircleShape
+                                        )
+                                        .padding(horizontal = 8.dp, vertical = 4.dp)
+                                )
+                            }
                         }
                     }
+                    items(state.returnedItems) { item ->
+                        ReturnItemCard(
+                            isSummary = true,
+                            item = item,
+                            onAddItemClick = {},
+                            onRemoveItemClick = {}
+                        )
+                        Spacer(Modifier.height(12.dp))
+                    }
                 }
-                items(state.returnedItems) { item ->
-                    ReturnItemCard(
-                        isSummary = true,
-                        item = item,
-                        onAddItemClick = {},
-                        onRemoveItemClick = {}
-                    )
-                    Spacer(Modifier.height(12.dp))
-                }
-            }
-            Spacer(Modifier.height(24.dp))
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondary),
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(16.dp))
+                Spacer(Modifier.height(24.dp))
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondary),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
                 ) {
-                    Column(
+                    Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(24.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
+                            .clip(RoundedCornerShape(16.dp))
                     ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = stringResource(Res.string.total_Sale_label),
-                                style = MaterialTheme.typography.bodySmall,
-                                color = Color.White.copy(alpha = 0.7f)
-                            )
-                            Text(
-                                text = state.totalValueOfSaleFormatted,
-                                style = MaterialTheme.typography.bodySmall,
-                                fontWeight = FontWeight.Medium,
-                                color = Color.White
-                            )
-                        }
-                        Spacer(Modifier.height(26.dp))
-                        Separator()
-                        Spacer(Modifier.height(26.dp))
                         Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(24.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Text(
-                                text = stringResource(Res.string.balance_returned),
-                                style = MaterialTheme.typography.bodySmall,
-                                color = Color.White.copy(alpha = 0.7f),
-                                modifier = Modifier.padding(bottom = 4.dp)
-                            )
-                            Text(
-                                text = state.totalValueOfReturnFormatted,
-                                style = MaterialTheme.typography.displaySmall,
-                                fontSize = 36.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.tertiary,
-                                letterSpacing = (-0.02).em
-                            )
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = stringResource(Res.string.total_Sale_label),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = Color.White.copy(alpha = 0.7f)
+                                )
+                                Text(
+                                    text = state.totalValueOfSaleFormatted,
+                                    style = MaterialTheme.typography.bodySmall,
+                                    fontWeight = FontWeight.Medium,
+                                    color = Color.White
+                                )
+                            }
+                            Spacer(Modifier.height(26.dp))
+                            Separator()
+                            Spacer(Modifier.height(26.dp))
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Text(
+                                    text = stringResource(Res.string.balance_returned),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = Color.White.copy(alpha = 0.7f),
+                                    modifier = Modifier.padding(bottom = 4.dp)
+                                )
+                                Text(
+                                    text = state.totalValueOfReturnFormatted,
+                                    style = MaterialTheme.typography.displaySmall,
+                                    fontSize = 36.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.tertiary,
+                                    letterSpacing = (-0.02).em
+                                )
+                            }
+
                         }
-
                     }
-                }
 
+                }
+                Spacer(Modifier.height(20.dp))
+                Text(
+                    text = "${stringResource(Res.string.transaction_id_label)}: ${state.transactionId}\n${state.formattedDate}",
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = .6f),
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 32.dp),
+                    lineHeight = 16.sp,
+                    letterSpacing = 1.sp
+                )
+                Spacer(Modifier.height(20.dp))
             }
-            Spacer(Modifier.height(20.dp))
-            Text(
-                text = "${stringResource(Res.string.transaction_id_label)}: ${state.transactionId}\n${state.formattedDate}",
-                style = MaterialTheme.typography.labelLarge,
-                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = .6f),
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 32.dp),
-                lineHeight = 16.sp,
-                letterSpacing = 1.sp
-            )
-            Spacer(Modifier.height(20.dp))
+
         }
 
     }

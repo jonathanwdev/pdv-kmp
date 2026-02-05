@@ -1,5 +1,6 @@
 package com.poc.core.designsystem.components.buttons
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -41,20 +42,16 @@ fun PrinterButton(
         modifier = modifier
             .fillMaxWidth()
             .height(60.dp)
-            .clip(RoundedCornerShape(12.dp))
-            .background(Color.White)
-            .border(1.dp, Color(0xFFE5E7EB), RoundedCornerShape(12.dp))
-            .shadow(
-                2.dp,
-                RoundedCornerShape(12.dp),
-                ambientColor = Color.LightGray,
-                spotColor = Color.LightGray
-            ),
+            .clip(RoundedCornerShape(12.dp)),
         colors = ButtonDefaults.buttonColors(
             containerColor = Color.White,
             contentColor = MaterialTheme.colorScheme.onSurface
         ),
-        contentPadding = PaddingValues(0.dp)
+        contentPadding = PaddingValues(0.dp),
+        border = BorderStroke(
+            width = 2.dp,
+            color = MaterialTheme.colorScheme.outline.copy(alpha = .1f)
+        )
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,

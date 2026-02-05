@@ -5,7 +5,6 @@ import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -14,18 +13,18 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -39,9 +38,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.poc.core.designsystem.components.avatars.ProductAvatar
@@ -52,6 +53,7 @@ import com.poc.core.designsystem.components.textfield.PocPdvTextField
 import com.poc.core.designsystem.theme.PocPdvTheme
 import com.poc.core.designsystem.theme.secondaryGreen
 import com.poc.core.presentation.utils.ObserveAsEvent
+import com.poc.core.presentation.utils.currentDeviceConfiguration
 import com.poc.feature.sale.components.SalePriceDescriptionBox
 import com.poc.feature.sale.components.SaleTopBar
 import designsystem.resources.send
@@ -65,6 +67,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.scope.Scope
 import pocpdv.feature.sale.generated.resources.Res
+import pocpdv.feature.sale.generated.resources.add
 import pocpdv.feature.sale.generated.resources.charge_btn_with_price
 import pocpdv.feature.sale.generated.resources.new_sale
 import pocpdv.feature.sale.generated.resources.product_not_found
@@ -141,7 +144,7 @@ fun BagScreen(
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { paddingValues ->
         Column(
-            modifier = Modifier.padding(paddingValues)
+            modifier = Modifier.padding(paddingValues),
         ) {
             PocPdvTextField(
                 modifier = Modifier
@@ -166,7 +169,7 @@ fun BagScreen(
                         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 0.dp)
                     ) {
                         Text(
-                            text = stringResource(designsystem.resources.Res.string.send),
+                            text = stringResource(Res.string.add),
                             fontSize = 14.sp,
                             fontWeight = FontWeight.SemiBold
                         )
@@ -189,11 +192,12 @@ fun BagScreen(
                     state.items.isEmpty() -> {
                         item {
                             Column(
-                                modifier = Modifier.fillMaxSize(),
+                                modifier = Modifier.fillMaxWidth(),
                                 verticalArrangement = Arrangement.Center,
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
                                 Image(
+                                    modifier = Modifier.heightIn(max = 440.dp),
                                     painter = rememberLottiePainter(
                                         composition = composition,
                                         progress = { progress },

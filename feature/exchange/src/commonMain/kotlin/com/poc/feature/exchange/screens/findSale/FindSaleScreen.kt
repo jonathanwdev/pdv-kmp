@@ -34,6 +34,7 @@ import com.poc.core.designsystem.components.common.VirtualKeypad
 import com.poc.core.designsystem.components.textfield.PocPdvTextField
 import com.poc.core.designsystem.theme.PocPdvTheme
 import com.poc.core.presentation.utils.ObserveAsEvent
+import com.poc.core.presentation.utils.currentDeviceConfiguration
 import com.poc.feature.exchange.components.ExchangeSteps
 import com.poc.feature.exchange.components.ExchangeTopAppBar
 import org.jetbrains.compose.resources.stringResource
@@ -89,6 +90,8 @@ fun FindSaleScreen(
     snackbarHostState: SnackbarHostState,
     onAction: (FindSaleAction) -> Unit,
 ) {
+    val isMobile = currentDeviceConfiguration().isMobile
+
     Scaffold(
         containerColor = MaterialTheme.colorScheme.surface,
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -111,7 +114,7 @@ fun FindSaleScreen(
         ) {
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(if(isMobile)1f else 0.7f)
                     .weight(1f)
             ) {
                 ExchangeSteps(currentStep = 1)
@@ -163,7 +166,7 @@ fun FindSaleScreen(
                 }
             }
             Column(
-                modifier = Modifier.weight(1f).fillMaxWidth(),
+                modifier = Modifier.weight(1f).fillMaxWidth(if(isMobile)1f else 0.7f),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 VirtualKeypad(

@@ -2,6 +2,7 @@
 plugins {
     alias(libs.plugins.convention.cmp.application)
     alias(libs.plugins.compose.hot.reload)
+
 }
 
 kotlin {

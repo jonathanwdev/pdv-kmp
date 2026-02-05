@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.poc.core.presentation.utils.currentDeviceConfiguration
 import org.jetbrains.compose.resources.stringResource
 import pocpdv.feature.sale.generated.resources.Res
 import pocpdv.feature.sale.generated.resources.total_due
@@ -22,6 +23,7 @@ fun TotalBox(
     total: String,
     isLight: Boolean = false
 ) {
+    val deviceConfiguration = currentDeviceConfiguration()
     Box(
         modifier = modifier
             .padding(horizontal = 12.dp)
@@ -30,7 +32,7 @@ fun TotalBox(
                 color = if(isLight) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.secondary,
                 shape = MaterialTheme.shapes.medium
             )
-            .padding(vertical = 19.dp),
+            .padding(vertical = if(deviceConfiguration.isMobile) 19.dp else 35.dp),
         contentAlignment = Alignment.Center
     ) {
         Column(

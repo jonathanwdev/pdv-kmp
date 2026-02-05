@@ -35,6 +35,7 @@ import com.poc.core.designsystem.components.buttons.PocPdvButton
 import com.poc.core.designsystem.modifiers.drawShadowLine
 import com.poc.core.designsystem.theme.PocPdvTheme
 import com.poc.core.domain.models.PaymentMethodEnum
+import com.poc.core.presentation.utils.currentDeviceConfiguration
 import com.poc.feature.sale.components.SaleTopBar
 import com.poc.feature.sale.components.TotalBox
 import com.poc.feature.sale.models.PaymentListItem
@@ -80,6 +81,7 @@ fun PaymentScreen(
     state: PaymentState,
     onAction: (PaymentAction) -> Unit,
 ) {
+    val deviceConfiguration = currentDeviceConfiguration()
     Scaffold(
         containerColor = MaterialTheme.colorScheme.surfaceVariant,
         topBar = {
@@ -144,7 +146,7 @@ fun PaymentScreen(
                     )
                 ) { item ->
                     CardButton(
-                        modifier = Modifier.size(120.dp),
+                        modifier = Modifier.size(if (deviceConfiguration.isMobile) 120.dp else 200.dp),
                         onClick = {
                             onAction(PaymentAction.OnPaymentMethodClick(item.methodEnum))
                         },
@@ -196,7 +198,10 @@ fun PaymentScreen(
                 PocPdvButton(
                     modifier = Modifier.fillMaxWidth(),
                     enabled = state.paymentMethodSelected != null,
-                    text = stringResource(Res.string.charge_btn_with_price, state.totalValueFormatted),
+                    text = stringResource(
+                        Res.string.charge_btn_with_price,
+                        state.totalValueFormatted
+                    ),
                     onClick = {
                         onAction(PaymentAction.OnChargeClick)
 
