@@ -38,4 +38,3 @@ abstract class PocPdvDatabase : RoomDatabase() {
         const val DB_NAME = "poc_pdv.db"
     }
 }
-
